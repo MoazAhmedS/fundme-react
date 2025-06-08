@@ -1,5 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
+import Navbar from './NavigationComponents/Navbar';
+import Footer from './NavigationComponents/Footer';
+import SearchBar from './NavigationComponents/SearchBar';
+import Pagination from './NavigationComponents/Pagination';
 
 function App() {
   return (
