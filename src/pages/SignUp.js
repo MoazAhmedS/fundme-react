@@ -88,7 +88,7 @@ const SignUp = () => {
   };
 
   const inputClass = (field) =>
-    `w-full px-3 py-2 rounded-lg bg-[#1e1e3f] text-white border pr-10 ${
+    `w-full px-3 py-2 rounded-lg bg-[#374252] text-white border pr-10 ${
       errors[field]
         ? "border-red-500"
         : formData[field]
@@ -97,12 +97,15 @@ const SignUp = () => {
     }`;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0B0B2B] px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#101827] px-4">
      <div className="mt-8 mb-6">
         <ProjectName />
      </div>
-
-      <FormWrapper title="Sign Up">
+        
+      <FormWrapper
+        title="Create Account"
+        subtitle="Join our community of innovators"
+        >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* First Name */}
@@ -210,7 +213,7 @@ const SignUp = () => {
             )}
           </FormFieldWrapper>
 
-          <SubmitButton text="Sign Up" isLoading={false} disabled={!isFormValid} />
+          <SubmitButton text="Create Acount" isLoading={false} disabled={!isFormValid} />
 
           <p className="text-sm text-white text-center mt-4">
             Already have an account?{" "}
