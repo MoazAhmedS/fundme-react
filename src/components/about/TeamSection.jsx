@@ -4,27 +4,27 @@ import Card from './Card';
 const TeamSection = () => {
   const teamMembers = [
     {
-      name: "Moaz Ahmad Sayed",
+      name: "Moaz Ahmad ",
       role: "BackEnd Developer",
       bio: "Passionate about connecting innovative projects with supporters worldwide.",
       image: "moaz.jpeg"
     }, {
-      name: "Abdullah ayman mohamed",
+      name: "Abdullah ayman ",
       role: "BackEnd Developer",
       bio: "Passionate about connecting innovative projects with supporters worldwide.",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786"
+      image: "abdo.jpeg"
     }, {
-      name: "Mahmoud Samir Oraby",
+      name: "Mahmoud Oraby",
       role: "FrontEnd Developer",
       bio: "Passionate about connecting innovative projects with supporters worldwide.",
       image: "oraby.jpeg"
     }, {
-      name: "Girgis Kelliny Girgis ",
+      name: "Girgis Kelliny ",
       role: "BackEnd Developer",
       bio: "Passionate about connecting innovative projects with supporters worldwide.",
       image: "girgis.jpeg"
     }, {
-      name: "Ebram Rasmy Ayad Zakher",
+      name: "Ebram Rasmy",
       role: "FrontEnd Developer",
       bio: "Passionate about connecting innovative projects with supporters worldwide.",
       image: "Ebram.jpeg"
