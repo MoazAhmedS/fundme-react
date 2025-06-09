@@ -3,6 +3,7 @@ import HeroSection from '../about/HeroSection';
 import Navbar from '../NavigationComponents/Navbar';
 import Footer from '../NavigationComponents/Footer';
 import MissionSection from '../about/MissionSection';
+import TeamSection from '../about/TeamSection';
 
 const AboutUs = () => {
   return (
@@ -10,6 +11,7 @@ const AboutUs = () => {
       <Navbar/>
       <HeroSection />
       <MissionSection/>
+      <TeamSection/>
       <Footer/>
     </div>
   );
