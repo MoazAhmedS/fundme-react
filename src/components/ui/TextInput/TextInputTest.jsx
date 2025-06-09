@@ -1,4 +1,4 @@
-import TextInput from "../TextInput/TextInput";
+import TextInput from "./TextInput";
 import { useState } from "react";
 
 const TextInputTest = () => {
