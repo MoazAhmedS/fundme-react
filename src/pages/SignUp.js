@@ -145,7 +145,7 @@ const SignUp = () => {
 
           {/* Email */}
           <FormFieldWrapper>
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Email Address</Label>
             <div className="relative">
               <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
@@ -165,12 +165,12 @@ const SignUp = () => {
           <FormFieldWrapper>
             <Label htmlFor="password">Password</Label>
             <div className="relative">
-              <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <ShowHidePassword
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                placeholder="Enter your password"
                 className={`${inputClass("password")} pl-10`}
               />
             </div>
