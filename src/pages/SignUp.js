@@ -1,0 +1,235 @@
+import React, { useState } from "react";
+import FormWrapper from "../components/Froms/FormWrapper";
+import FormFieldWrapper from "../components/Froms/FormFieldWrapper";
+import Label from "../components/Froms/Label";
+import ErrorMessage from "../components/Froms/ErrorMessage";
+import ShowHidePassword from "../components/Froms/ShowHidePassword";
+import SubmitButton from "../components/Froms/SubmitButton";
+import FacebookButton from "../components/Froms/FacebookButton";
+import ProjectName from "../components/NavigationComponents/ProjectName";
+import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+
+const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const validateName = (name) => /^\S+$/.test(name);
+const validatePassword = (password) =>
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+
+const SignUp = () => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    termsAccepted: false,
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const validateField = (name, value) => {
+    switch (name) {
+      case "firstName":
+      case "lastName":
+        if (!value) return `${name === "firstName" ? "First" : "Last"} name is required`;
+        if (!validateName(value)) return `${name === "firstName" ? "First" : "Last"} name must not contain spaces`;
+        break;
+      case "email":
+        if (!value) return "Email is required";
+        if (!validateEmail(value)) return "Invalid email format";
+        break;
+      case "password":
+        if (!value) return "Password is required";
+        if (!validatePassword(value))
+          return "Password must be at least 8 characters, include uppercase, lowercase, digit, and special character";
+        break;
+      case "confirmPassword":
+        if (!value) return "Confirm password is required";
+        if (value !== formData.password) return "Passwords do not match";
+        break;
+      case "termsAccepted":
+        if (!value) return "You must accept the terms";
+        break;
+      default:
+        return "";
+    }
+    return "";
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const val = type === "checkbox" ? checked : value;
+    setFormData({ ...formData, [name]: val });
+
+    const errorMsg = validateField(name, val);
+    setErrors((prev) => ({
+      ...prev,
+      [name]: errorMsg,
+      ...(name === "password" && formData.confirmPassword
+        ? { confirmPassword: validateField("confirmPassword", formData.confirmPassword) }
+        : {}),
+    }));
+  };
+
+  const isFormValid =
+    Object.values(errors).every((e) => e === "") &&
+    Object.values(formData).every((val) => val !== "" && val !== false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newErrors = {};
+    Object.keys(formData).forEach((key) => {
+      newErrors[key] = validateField(key, formData[key]);
+    });
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).every((err) => err === "")) {
+      alert("Sign up successful!");
+    }
+  };
+
+  const inputClass = (field) =>
+    `w-full px-3 py-2 rounded-lg bg-[#1e1e3f] text-white border pr-10 ${
+      errors[field]
+        ? "border-red-500"
+        : formData[field]
+        ? "border-green-500"
+        : "border-gray-600"
+    }`;
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0B0B2B] px-4">
+     <div className="mt-8 mb-6">
+        <ProjectName />
+     </div>
+
+      <FormWrapper title="Sign Up">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* First Name */}
+            <FormFieldWrapper>
+              <Label htmlFor="firstName">First Name</Label>
+              <div className="relative">
+                <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  name="firstName"
+                  id="firstName"
+                  placeholder="e.g. John"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className={`${inputClass("firstName")} pl-10`}
+                />
+              </div>
+              {errors.firstName && <ErrorMessage message={errors.firstName} />}
+            </FormFieldWrapper>
+
+            {/* Last Name */}
+            <FormFieldWrapper>
+              <Label htmlFor="lastName">Last Name</Label>
+              <div className="relative">
+                <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  name="lastName"
+                  id="lastName"
+                  placeholder="e.g. Doe"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className={`${inputClass("lastName")} pl-10`}
+                />
+              </div>
+              {errors.lastName && <ErrorMessage message={errors.lastName} />}
+            </FormFieldWrapper>
+          </div>
+
+          {/* Email */}
+          <FormFieldWrapper>
+            <Label htmlFor="email">Email</Label>
+            <div className="relative">
+              <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                name="email"
+                id="email"
+                type="email"
+                placeholder="example@domain.com"
+                value={formData.email}
+                onChange={handleChange}
+                className={`${inputClass("email")} pl-10`}
+              />
+            </div>
+            {errors.email && <ErrorMessage message={errors.email} />}
+          </FormFieldWrapper>
+
+          {/* Password */}
+          <FormFieldWrapper>
+            <Label htmlFor="password">Password</Label>
+            <div className="relative">
+              <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <ShowHidePassword
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className={`${inputClass("password")} pl-10`}
+              />
+            </div>
+            {errors.password && <ErrorMessage message={errors.password} />}
+          </FormFieldWrapper>
+
+          {/* Confirm Password */}
+          <FormFieldWrapper>
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <div className="relative">
+              <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                name="confirmPassword"
+                id="confirmPassword"
+                type="password"
+                placeholder="Re-enter password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className={`${inputClass("confirmPassword")} pl-10`}
+              />
+            </div>
+            {errors.confirmPassword && (
+              <ErrorMessage message={errors.confirmPassword} />
+            )}
+          </FormFieldWrapper>
+
+          {/* Terms */}
+          <FormFieldWrapper>
+            <label className="text-white flex items-center space-x-2">
+              <input
+                type="checkbox"
+                name="termsAccepted"
+                checked={formData.termsAccepted}
+                onChange={handleChange}
+              />
+              <span>I agree to the Terms of Service and Privacy Policy</span>
+            </label>
+            {errors.termsAccepted && (
+              <ErrorMessage message={errors.termsAccepted} />
+            )}
+          </FormFieldWrapper>
+
+          <SubmitButton text="Sign Up" isLoading={false} disabled={!isFormValid} />
+
+          <p className="text-sm text-white text-center mt-4">
+            Already have an account?{" "}
+            <a href="/login" className="text-purple-400 underline">
+              Sign in
+            </a>
+          </p>
+
+          <p className="text-sm text-white text-center mt-2">
+            Or continue with
+          </p>
+
+          <div className="mt-2">
+            <FacebookButton />
+          </div>
+        </form>
+      </FormWrapper>
+    </div>
+  );
+};
+
+export default SignUp;
