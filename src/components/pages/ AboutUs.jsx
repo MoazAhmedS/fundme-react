@@ -4,6 +4,7 @@ import Navbar from '../NavigationComponents/Navbar';
 import Footer from '../NavigationComponents/Footer';
 import MissionSection from '../about/MissionSection';
 import TeamSection from '../about/TeamSection';
+import ImpactSection from '../about/ImpactSection';
 
 const AboutUs = () => {
   return (
@@ -11,6 +12,7 @@ const AboutUs = () => {
       <Navbar/>
       <HeroSection />
       <MissionSection/>
+      <ImpactSection/>
       <TeamSection/>
       <Footer/>
     </div>
