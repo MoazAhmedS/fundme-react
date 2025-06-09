@@ -1,17 +1,26 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-const ShowHidePassword = ({ id, value, onChange }) => {
+const ShowHidePassword = ({
+  id,
+  name,
+  value,
+  onChange,
+  onBlur,
+  className = "",
+}) => {
   const [show, setShow] = useState(false);
 
   return (
     <div className="relative">
       <input
         id={id}
+        name={name}
         type={show ? "text" : "password"}
         value={value}
         onChange={onChange}
-        className="w-full px-3 py-2 rounded-lg bg-[#1e1e3f] text-white border border-gray-600 pr-10"
+        onBlur={onBlur}
+        className={`w-full px-3 py-2 rounded-lg bg-[#1e1e3f] text-white border pr-10 ${className}`}
       />
       <div
         className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-white"
