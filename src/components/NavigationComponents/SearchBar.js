@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { Search } from "lucide-react"; // lucide-react for icons
+import { Search } from "lucide-react";
 
 const SearchBar = ({ placeholder = "Search..." }) => {
   const [query, setQuery] = useState("");
 
   return (
     <div className="w-full max-w-md mx-auto mt-10 mb-10">
-      <div className="flex items-center bg-gray-900 rounded-2xl px-4 py-2 shadow-md transition-all focus-within:ring-2 ">
+      <div
+        className="flex items-center bg-gray-900 rounded-2xl px-4 py-2 shadow-md transition-all focus-within:ring-2"
+        style={{ border: "1px solid #999ea7" }} // ← custom border
+      >
         <Search className="text-gray-400 mr-3" />
         <input
           type="text"

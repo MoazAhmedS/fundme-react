@@ -1,112 +1,55 @@
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React from 'react';
 
-function Pagination() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 8; 
+function Pagination({ count, pageSize, currentPage, onPageChange }) {
+  const totalPages = Math.ceil(count / pageSize);
+  if (totalPages === 1) return null;
 
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handlePageClick = (page) => {
-    setCurrentPage(page);
-  };
-
-  const getVisiblePages = () => {
-    const pages = [];
-    const maxVisible = 5; 
-    pages.push(1);
-    
-    if (totalPages <= maxVisible) {
-      for (let i = 2; i <= totalPages - 1; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (currentPage > 3) {
-        pages.push('...');
-      }
-      
-      const start = Math.max(2, currentPage - 1);
-      const end = Math.min(totalPages - 1, currentPage + 1);
-      
-      for (let i = start; i <= end; i++) {
-        if (i !== 1 && i !== totalPages) {
-          pages.push(i);
-        }
-      }
-      
-      if (currentPage < totalPages - 2) {
-        pages.push('...');
-      }
-    }
-    
-    if (totalPages > 1) {
-      pages.push(totalPages);
-    }
-
-    return pages.slice(0, maxVisible); 
-  };
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
 
   return (
-    <div className="flex items-center justify-center my-8">
-      <nav className="flex items-center bg-[#0B0B2B] p-2 rounded-lg w-fit"> 
-        <button
-          onClick={handlePrev}
-          disabled={currentPage === 1}
-          className={`p-2 rounded-md ${
-            currentPage === 1
-              ? 'text-gray-500 cursor-not-allowed'
-              : 'text-white hover:bg-[#1E1E3F]'
-          }`}
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
+    <nav className="flex justify-center my-6">
+      <ul className="flex items-center space-x-2 bg-[#1c0b3a] px-4 py-2 rounded-xl">
+        {currentPage > 1 && (
+          <li>
+            <button
+              className="px-3 py-2 text-white rounded-xl hover:bg-[#2b134f] transition"
+              onClick={() => onPageChange(currentPage - 1)}
+            >
+              &lt;
+            </button>
+          </li>
+        )}
 
-        <div className="flex mx-1 w-[180px] justify-center"> 
-          {getVisiblePages().map((page, index) => (
-            <div key={index} className="mx-0.5">
-              {page === '...' ? (
-                <span className="text-gray-400 px-2 flex items-center justify-center w-10">
-                  ...
-                </span>
-              ) : (
-                <button
-                  onClick={() => handlePageClick(page)}
-                  className={`w-10 h-10 flex items-center justify-center rounded-md text-sm font-medium ${
-                    currentPage === page
-                      ? 'bg-gradient-to-r from-[#d14afb] to-[#6e8afb] text-white'
-                      : 'text-gray-300 hover:bg-[#1E1E3F]'
-                  }`}
-                >
-                  {page}
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
+        {pageNumbers.map((number) => (
+          <li key={number}>
+            <button
+              className={`px-4 py-2 rounded-xl text-white font-medium transition-all duration-200 ${
+                number === currentPage
+                  ? 'bg-gradient-to-r from-pink-500 to-purple-500 shadow-lg'
+                  : 'bg-[#1c0b3a] hover:bg-[#2b134f]'
+              }`}
+              onClick={() => onPageChange(number)}
+            >
+              {number}
+            </button>
+          </li>
+        ))}
 
-        <button
-          onClick={handleNext}
-          disabled={currentPage === totalPages}
-          className={`p-2 rounded-md ${
-            currentPage === totalPages
-              ? 'text-gray-500 cursor-not-allowed'
-              : 'text-white hover:bg-[#1E1E3F]'
-          }`}
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
-      </nav>
-    </div>
+        {currentPage < totalPages && (
+          <li>
+            <button
+              className="px-3 py-2 text-white rounded-xl hover:bg-[#2b134f] transition"
+              onClick={() => onPageChange(currentPage + 1)}
+            >
+              &gt;
+            </button>
+          </li>
+        )}
+      </ul>
+    </nav>
   );
 }
 
