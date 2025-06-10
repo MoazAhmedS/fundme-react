@@ -27,5 +27,13 @@ export const faqs = [
   {
     question: "What fees do you charge?",
     answer: "We charge a 5% platform fee on successfully funded projects."
+  },
+  {
+    question: "How long do campaigns run?",
+    answer: "Campaign duration is flexible, typically ranging from 30 to 60 days. You can set your preferred timeline when creating your project."
+  },
+  {
+    question: "When do I receive the funds?",
+    answer: "Funds are released once your campaign successfully reaches its goal and the campaign period ends."
   }
 ];

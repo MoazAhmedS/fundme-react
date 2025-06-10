@@ -3,6 +3,7 @@ import Footer from '../NavigationComponents/Footer';
 import ContactHeader from '../Contact/ContactHeader';
 import ContactMethods from '../Contact/ContactMethods'
 import ContactFormSection from '../Contact/ContactFormSection';
+import FAQSection from '../Contact/FAQSection'
 const ContactUs = () => {
   return (
    <> 
@@ -14,6 +15,7 @@ const ContactUs = () => {
           <ContactMethods />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <ContactFormSection />
+             <FAQSection />
           </div>
         </div>
       </section>
