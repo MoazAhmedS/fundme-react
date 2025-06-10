@@ -14,7 +14,8 @@ const projects = [
     backers: 234,
     days_left: 45,
     rating: 4.7,
-    total_ratings: 42
+    total_ratings: 42,
+    tags: ["sustainable", "eco-friendly", "ocean plastic", "recycling", "fashion", "environment", "social impact", "innovation"]
   },
   {
     id: 2,
@@ -31,7 +32,8 @@ const projects = [
     backers: 500,
     days_left: 30,
     rating: 4.3,
-    total_ratings: 87
+    total_ratings: 87,
+    tags: ["technology", "AI", "smart home", "automation", "IoT", "innovation", "energy saving"]
   },
 ];
 
