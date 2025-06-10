@@ -3,7 +3,7 @@ import ProjectName from "./ProjectName";
 
 function Footer(){
   return (
-    <footer className="bg-[#0B0B2B] text-white py-12 px-6 md:px-20 mt-auto">
+    <footer className="bg-[#111827] text-white py-12 px-6 md:px-20 mt-auto" style={{ borderTop : "1px solid rgb(101, 101, 104)" }}>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-10 text-sm max-w-7xl mx-auto">
         <div className="text-left">
           <ProjectName />

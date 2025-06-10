@@ -10,7 +10,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#111827] px-6 py-4">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#111827] px-6 py-4" style={{ borderBottom: "1px solid rgb(101, 101, 104)" }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <ProjectName></ProjectName>
 

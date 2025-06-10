@@ -10,8 +10,8 @@ function Pagination({ count, pageSize, currentPage, onPageChange }) {
   }
 
   return (
-    <nav className="flex justify-center my-6">
-      <ul className="flex items-center space-x-2 bg-[#1c0b3a] px-4 py-2 rounded-xl">
+    <nav className="flex justify-center my-6" >
+      <ul className="flex items-center space-x-2 bg-[#111827] px-4 py-2 rounded-xl" style={{ border: "1px solid rgb(101, 101, 104)" }}>
         {currentPage > 1 && (
           <li>
             <button
@@ -28,8 +28,8 @@ function Pagination({ count, pageSize, currentPage, onPageChange }) {
             <button
               className={`px-4 py-2 rounded-xl text-white font-medium transition-all duration-200 ${
                 number === currentPage
-                  ? 'bg-gradient-to-r from-pink-500 to-purple-500 shadow-lg'
-                  : 'bg-[#1c0b3a] hover:bg-[#2b134f]'
+                  ? 'bg-gradient-to-r from-[#d14afb] to-[#6e8afb] shadow-lg'
+                  : 'bg-[#111827] hover:bg-[#2b134f]'
               }`}
               onClick={() => onPageChange(number)}
             >
