@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import AboutUs from './components/pages/ AboutUs';
+import ContactUs from "./components/pages/ContactUs"
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <AboutUs/>
+      <ContactUs/>
     </div>
   );
 }
