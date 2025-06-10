@@ -1,16 +1,19 @@
 import React, { useState } from "react";
-import FormWrapper from "../components/Froms/FormWrapper";
-import FormFieldWrapper from "../components/Froms/FormFieldWrapper";
-import Label from "../components/Froms/Label";
-import ErrorMessage from "../components/Froms/ErrorMessage";
-import ShowHidePassword from "../components/Froms/ShowHidePassword";
-import SubmitButton from "../components/Froms/SubmitButton";
-import FacebookButton from "../components/Froms/FacebookButton";
-import ProjectName from "../components/NavigationComponents/ProjectName";
-import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import FormWrapper from "../Froms/FormWrapper";
+import FormFieldWrapper from "../Froms/FormFieldWrapper";
+import Label from "../Froms/Label";
+import ErrorMessage from "../Froms/ErrorMessage";
+import ShowHidePassword from "../Froms/ShowHidePassword";
+import SubmitButton from "../Froms/SubmitButton";
+import FacebookButton from "../Froms/FacebookButton";
+import ProjectName from "../NavigationComponents/ProjectName";
+import FileUploader from "../Froms/FileUploader";
+import { FaUser, FaEnvelope, FaLock, FaPhone } from "react-icons/fa";
+
 
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const validateName = (name) => /^\S+$/.test(name);
+const validatePhone = (phone) => /^\+?\d{10,15}$/.test(phone);
 const validatePassword = (password) =>
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
@@ -19,6 +22,8 @@ const SignUp = () => {
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
+    profilePicture: null,
     password: "",
     confirmPassword: "",
     termsAccepted: false,
@@ -36,6 +41,13 @@ const SignUp = () => {
       case "email":
         if (!value) return "Email is required";
         if (!validateEmail(value)) return "Invalid email format";
+        break;
+      case "phone":
+        if (!value) return "Phone number is required";
+        if (!validatePhone(value)) return "Invalid phone number format";
+        break;
+      case "profilePicture":
+        if (!value) return "Profile picture is required";
         break;
       case "password":
         if (!value) return "Password is required";
@@ -56,8 +68,9 @@ const SignUp = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const val = type === "checkbox" ? checked : value;
+    const { name, value, type, checked, files } = e.target;
+    const val = type === "checkbox" ? checked : type === "file" ? files[0] : value;
+
     setFormData({ ...formData, [name]: val });
 
     const errorMsg = validateField(name, val);
@@ -72,7 +85,9 @@ const SignUp = () => {
 
   const isFormValid =
     Object.values(errors).every((e) => e === "") &&
-    Object.values(formData).every((val) => val !== "" && val !== false);
+    Object.entries(formData).every(
+      ([key, val]) => (key === "profilePicture" ? val !== null : val !== "" && val !== false)
+    );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -84,6 +99,7 @@ const SignUp = () => {
 
     if (Object.values(newErrors).every((err) => err === "")) {
       alert("Sign up successful!");
+      
     }
   };
 
@@ -98,14 +114,11 @@ const SignUp = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#101827] px-4">
-     <div className="mt-8 mb-6">
+      <div className="mt-8 mb-6">
         <ProjectName />
-     </div>
-        
-      <FormWrapper
-        title="Create Account"
-        subtitle="Join our community of innovators"
-        >
+      </div>
+
+      <FormWrapper title="Create Account" subtitle="Join our community of innovators">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* First Name */}
@@ -161,40 +174,66 @@ const SignUp = () => {
             {errors.email && <ErrorMessage message={errors.email} />}
           </FormFieldWrapper>
 
+          {/* Phone */}
+          <FormFieldWrapper>
+            <Label htmlFor="phone">Phone Number</Label>
+            <div className="relative">
+              <FaPhone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                name="phone"
+                id="phone"
+                type="tel"
+                placeholder="+201234567890"
+                value={formData.phone}
+                onChange={handleChange}
+                className={`${inputClass("phone")} pl-10`}
+              />
+            </div>
+            {errors.phone && <ErrorMessage message={errors.phone} />}
+          </FormFieldWrapper>
+
+          {/* Profile Picture */}
+          <FormFieldWrapper>
+              <Label htmlFor="profilePicture">Profile Picture</Label>
+              <FileUploader
+                id="profilePicture"
+                name="profilePicture"
+                onChange={handleChange}
+                error={errors.profilePicture}
+              />
+              {errors.profilePicture && (
+                <ErrorMessage message={errors.profilePicture} />
+              )}
+          </FormFieldWrapper>
+
           {/* Password */}
           <FormFieldWrapper>
             <Label htmlFor="password">Password</Label>
-            <div className="relative">
-              <ShowHidePassword
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                className={`${inputClass("password")} pl-10`}
-              />
-            </div>
+            <ShowHidePassword
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+              className={`${inputClass("password")} pl-10`}
+            />
             {errors.password && <ErrorMessage message={errors.password} />}
           </FormFieldWrapper>
 
           {/* Confirm Password */}
           <FormFieldWrapper>
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <div className="relative">
-              <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                name="confirmPassword"
-                id="confirmPassword"
-                type="password"
-                placeholder="Re-enter password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className={`${inputClass("confirmPassword")} pl-10`}
-              />
-            </div>
-            {errors.confirmPassword && (
-              <ErrorMessage message={errors.confirmPassword} />
-            )}
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <ShowHidePassword
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Re-enter password"
+                  className={`${inputClass("confirmPassword")} pl-10`}
+                />
+                {errors.confirmPassword && (
+                  <ErrorMessage message={errors.confirmPassword} />
+                )}
           </FormFieldWrapper>
 
           {/* Terms */}
@@ -213,7 +252,7 @@ const SignUp = () => {
             )}
           </FormFieldWrapper>
 
-          <SubmitButton text="Create Acount" isLoading={false} disabled={!isFormValid} />
+          <SubmitButton text="Create Account" isLoading={false} disabled={!isFormValid} />
 
           <p className="text-sm text-white text-center mt-4">
             Already have an account?{" "}
@@ -222,9 +261,11 @@ const SignUp = () => {
             </a>
           </p>
 
-          <p className="text-sm text-white text-center mt-2">
-            Or continue with
-          </p>
+          <div className="flex items-center my-4">
+            <div className="flex-grow border-t border-gray-600"></div>
+            <span className="mx-4 text-sm text-white">Or continue with</span>
+            <div className="flex-grow border-t border-gray-600"></div>
+          </div>
 
           <div className="mt-2">
             <FacebookButton />
