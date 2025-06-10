@@ -12,11 +12,11 @@ function getRemainingDays(endDate) {
 
 const ProjectCard = ({ project }) => {
   return (
-    <div className="bg-gray-800/50 text-white rounded-xl shadow-lg overflow-hidden max-w-sm w-full">
+    <div className="bg-gray-800/50 text-white rounded-xl shadow-lg overflow-hidden max-w-sm w-full transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:bg-gray-800/70">
       <img src={`http://localhost:8000${project.images[0].path}`} alt={project.title} className="w-full h-48 object-cover" />
 
       <div className="p-5 space-y-4">
-        <span className="inline-block bg-gray-700 text-sm text-white px-3 py-1 rounded-full">
+        <span className="inline-block bg-gray-700 text-sm text-white px-3 py-1 rounded-full transition-all duration-300 hover:bg-gray-600">
           {project.categoryObject.name}
         </span>
 

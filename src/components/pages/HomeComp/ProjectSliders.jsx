@@ -22,7 +22,7 @@ const ProjectSlider = ({ title, subtitle, projects }) => {
   const totalWidth = projects.length * (cardWidth + gap);
 
   return (
-    <section className="py-16 px-4 bg-[#0B0E1D] text-white text-center overflow-hidden">
+    <section className="py-16 px-4 text-white text-center overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {title && <h2 className="text-3xl font-bold mb-2">{title}</h2>}
         {subtitle && <p className="text-lg text-gray-400 mb-10">{subtitle}</p>}
@@ -46,7 +46,7 @@ const ProjectSlider = ({ title, subtitle, projects }) => {
               }}
             >
               {projects.map((project) => (
-                <div key={project.id} className="w-[350px] shrink-0">
+                <div key={project.id} className="w-[350px] shrink-0 px-2 py-4">
                   <ProjectCard project={project} />
                 </div>
               ))}
