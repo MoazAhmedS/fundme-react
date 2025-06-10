@@ -1,7 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import ContactUs from "./components/pages/ContactUs"
-
+import { FcAbout } from 'react-icons/fc';
+import AboutUs from './components/pages/ AboutUs';
 function App() {
   return (
     <div className="App">
@@ -19,6 +20,7 @@ function App() {
           Learn React
         </a>
       </header> */}
+      {/* <AboutUs/> */}
       <ContactUs/>
     </div>
   );

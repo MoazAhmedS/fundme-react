@@ -3,7 +3,7 @@ import { faqs } from '../Contact/data/contactData';
 
 const FAQSection = () => {
   return (
-    <div className="lg:col-span-1">
+    <div className="lg:col-span-3">
       <h3 className="text-2xl font-bold text-white mb-6">
         Frequently Asked Questions
       </h3>
