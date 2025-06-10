@@ -45,6 +45,25 @@ const ProjectDetails = ({ projectId }) => {
     }
   ]);
 
+  // Comment state
+  const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState([
+    {
+      id: 1,
+      user: "John Doe",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face",
+      comment: "This is an amazing project! Looking forward to seeing the results.",
+      timestamp: "2 days ago"
+    },
+    {
+      id: 2,
+      user: "Sarah Wilson",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face",
+      comment: "Just donated $50. Keep up the great work!",
+      timestamp: "1 week ago"
+    }
+  ]);
+
   if (!project) {
     return (
       <div className="bg-gray-900 min-h-screen flex justify-center items-center">
@@ -88,6 +107,21 @@ const ProjectDetails = ({ projectId }) => {
     setUserRating(0);
     setReviewNote("");
     alert("Rating submitted successfully!");
+  };
+
+  const handleAddComment = () => {
+    if (!newComment.trim()) return;
+    
+    const comment = {
+      id: comments.length + 1,
+      user: "You",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face",
+      comment: newComment,
+      timestamp: "Just now"
+    };
+    
+    setComments([comment, ...comments]);
+    setNewComment("");
   };
 
   const renderStars = (rating) => {
@@ -201,7 +235,7 @@ const ProjectDetails = ({ projectId }) => {
             </div>
           </div>
 
-          {/* Rate This Project Section - LEFT ALIGNED */}
+          {/* Rate This Project Section */}
           <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700 mb-8">
             <h3 className="text-white text-xl font-semibold mb-6 text-left">Rate This Project</h3>
             
@@ -234,7 +268,7 @@ const ProjectDetails = ({ projectId }) => {
           </div>
 
           {/* Project Ratings Section */}
-          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700 mb-8">
             <h3 className="text-white text-xl font-semibold mb-6">
               Project Ratings ({reviews.length})
             </h3>
@@ -256,6 +290,60 @@ const ProjectDetails = ({ projectId }) => {
                       <span className="text-gray-400 text-sm">{review.timestamp}</span>
                     </div>
                     <p className="text-gray-300">{review.comment}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Comments Section */}
+          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700 mb-8">
+            <h2 className="text-lg font-semibold mb-4 text-white">
+              Comments ({comments.length})
+            </h2>
+
+            {/* Add Comment Input */}
+            <div className="mb-6">
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                className="w-full p-4 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-blue-500 focus:outline-none resize-none"
+                placeholder="Add a comment..."
+                rows="4"
+              />
+              <button 
+                onClick={handleAddComment}
+                className="mt-3 px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors font-medium"
+              >
+                Post Comment
+              </button>
+            </div>
+
+            {/* Comments List */}
+            <div className="space-y-4">
+              {comments.map((comment) => (
+                <div key={comment.id} className="flex items-start gap-3">
+                  <img 
+                    src={comment.avatar} 
+                    alt={comment.user} 
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div className="flex-1">
+                    <div className="bg-gray-700 text-white p-4 rounded-lg">
+                      <div className="text-sm font-semibold flex items-center justify-between mb-2">
+                        <span>{comment.user}</span>
+                        <span className="text-xs text-gray-400">{comment.timestamp}</span>
+                      </div>
+                      <div className="text-sm">{comment.comment}</div>
+                    </div>
+                    <div className="flex gap-4 mt-2">
+                      <button className="text-sm text-gray-400 hover:text-white transition-colors">
+                        Reply
+                      </button>
+                      <button className="text-sm text-red-400 hover:text-red-300 transition-colors">
+                        Report
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
