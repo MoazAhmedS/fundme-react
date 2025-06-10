@@ -7,6 +7,7 @@ import Badge from "./ui/ Badge/Badge";
 import projects from "../utilities/mockProjects";
 import Navbar from './NavigationComponents/Navbar';
 import Footer from './NavigationComponents/Footer';
+import CommentSection from './commentSystem/CommentSection';
 
 const ProjectDetails = ({ projectId }) => {
   const project = projects.find((proj) => proj.id === projectId);
@@ -46,7 +47,6 @@ const ProjectDetails = ({ projectId }) => {
   ]);
 
   // Comment state
-  const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([
     {
       id: 1,
@@ -63,6 +63,8 @@ const ProjectDetails = ({ projectId }) => {
       timestamp: "1 week ago"
     }
   ]);
+
+  const [newComment, setNewComment] = useState("");
 
   if (!project) {
     return (
@@ -165,13 +167,12 @@ const ProjectDetails = ({ projectId }) => {
       </div>
     );
   };
-
-  return (
+ return (
     <div className="bg-gray-900 min-h-screen flex flex-col">
-      <Navbar />
+      <Navbar className="shadow-lg" />
       
       {/* Back Button */}
-      <div className="px-8 py-6">
+      <div className="px-8 py-6 border-b border-gray-700">
         <button className="flex items-center text-gray-400 hover:text-white transition-colors duration-200">
           <ArrowLeft className="w-5 h-5 mr-2" />
           Back to Projects
@@ -183,12 +184,12 @@ const ProjectDetails = ({ projectId }) => {
         {/* Left Section */}
         <div className="flex-none" style={{ width: '700px' }}>
           {/* Image Carousel */}
-          <div className="relative mb-6">
+          <div className="relative mb-6 rounded-xl overflow-hidden shadow-lg">
             <ImageCarousel images={project.images} />
           </div>
 
           {/* Project Info Section */}
-          <div className="mb-12">
+          <div className="mb-12 bg-gray-800/50 rounded-xl p-6 border border-gray-700 shadow-lg">
             {/* Category and Share Row */}
             <div className="flex justify-between items-center mb-6">
               <span className="px-4 py-2 bg-purple-600 text-white text-sm rounded-full font-medium">
@@ -220,7 +221,7 @@ const ProjectDetails = ({ projectId }) => {
             </div>
 
             {/* Tags Section */}
-            <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700 mb-8">
+            <div className="bg-gray-700/50 rounded-lg p-4 border border-gray-600 mb-4">
               <div className="flex items-center mb-4">
                 <Tag className="w-5 h-5 text-gray-400 mr-2" />
                 <h3 className="text-white text-lg font-semibold">Tags</h3>
@@ -236,7 +237,7 @@ const ProjectDetails = ({ projectId }) => {
           </div>
 
           {/* Rate This Project Section */}
-          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700 mb-8">
+          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700 mb-8 shadow-lg">
             <h3 className="text-white text-xl font-semibold mb-6 text-left">Rate This Project</h3>
             
             <div className="mb-4 text-left">
@@ -268,7 +269,7 @@ const ProjectDetails = ({ projectId }) => {
           </div>
 
           {/* Project Ratings Section */}
-          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700 mb-8">
+          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700 mb-8 shadow-lg">
             <h3 className="text-white text-xl font-semibold mb-6">
               Project Ratings ({reviews.length})
             </h3>
@@ -296,63 +297,19 @@ const ProjectDetails = ({ projectId }) => {
             </div>
           </div>
 
-          {/* Comments Section */}
-          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700 mb-8">
-            <h2 className="text-lg font-semibold mb-4 text-white">
-              Comments ({comments.length})
-            </h2>
-
-            {/* Add Comment Input */}
-            <div className="mb-6">
-              <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                className="w-full p-4 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-blue-500 focus:outline-none resize-none"
-                placeholder="Add a comment..."
-                rows="4"
-              />
-              <button 
-                onClick={handleAddComment}
-                className="mt-3 px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors font-medium"
-              >
-                Post Comment
-              </button>
-            </div>
-
-            {/* Comments List */}
-            <div className="space-y-4">
-              {comments.map((comment) => (
-                <div key={comment.id} className="flex items-start gap-3">
-                  <img 
-                    src={comment.avatar} 
-                    alt={comment.user} 
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div className="flex-1">
-                    <div className="bg-gray-700 text-white p-4 rounded-lg">
-                      <div className="text-sm font-semibold flex items-center justify-between mb-2">
-                        <span>{comment.user}</span>
-                        <span className="text-xs text-gray-400">{comment.timestamp}</span>
-                      </div>
-                      <div className="text-sm">{comment.comment}</div>
-                    </div>
-                    <div className="flex gap-4 mt-2">
-                      <button className="text-sm text-gray-400 hover:text-white transition-colors">
-                        Reply
-                      </button>
-                      <button className="text-sm text-red-400 hover:text-red-300 transition-colors">
-                        Report
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700 mb-8 shadow-lg">
+            <CommentSection initialComments={comments.map((comment) => ({
+              id: comment.id,
+              user_id: comment.user,
+              comment: comment.comment,
+              created_date: comment.timestamp,
+              replies: []
+            }))} />
           </div>
         </div>
 
         {/* Right Section - Donation Card */}
-        <div className="flex-none bg-gray-800 rounded-xl p-8 h-fit  top-6" style={{ width: '420px' }}>
+        <div className="flex-none bg-gray-800 rounded-xl p-8 h-fit  top-6 shadow-lg" style={{ width: '420px' }}>
           {/* Progress Section */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-3">
@@ -360,7 +317,6 @@ const ProjectDetails = ({ projectId }) => {
             </div>
             <ProgressBar percentage={percentage} />
           </div>
-
           {/* Stats Row */}
           <div className="flex justify-between items-center mb-8">
             <div>
@@ -411,7 +367,7 @@ const ProjectDetails = ({ projectId }) => {
         </div>
       </div>
 
-      <Footer />
+      <Footer className="bg-gray-900 border-t border-gray-700" />
     </div>
   );
 };
