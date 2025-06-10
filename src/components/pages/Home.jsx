@@ -6,6 +6,8 @@ import ProjectSlider from './HomeComp/ProjectSliders';
 import { Award } from "lucide-react";
 import { axiosInstance } from '../../Network/axiosinstance'; // adjust path as needed
 import Loader from '../ui/loader/Loader'; // adjust path as needed
+import { CategoriesSection } from './HomeComp/CategoriesSection';
+import CallToJoin from './HomeComp/JoinUS';
 const Index = () => {
     const [loadingTop, setLoadingTop] = useState(true);
     const [loadingLatest, setLoadingLatest] = useState(true);
@@ -78,6 +80,9 @@ const Index = () => {
                 />
             )}
 
+
+            <CategoriesSection/>
+            <CallToJoin />
             <Footer />
         </div>
     );
