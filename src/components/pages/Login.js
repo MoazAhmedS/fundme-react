@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import FormWrapper from "../Froms/FormWrapper";
 import FormFieldWrapper from "../Froms/FormFieldWrapper";
 import Label from "../Froms/Label";
@@ -120,18 +121,18 @@ const Login = () => {
               <span>Remember me</span>
             </label>
 
-            <a href="/forgot-password" className="text-purple-400 underline">
+            <Link to="/forgot-password" className="text-purple-400 underline">
               Forgot Password?
-            </a>
+            </Link>
           </div>
 
           <SubmitButton text="Sign in" isLoading={false} disabled={!isFormValid} />
 
           <p className="text-sm text-white text-center mt-4">
             Don’t have an account?{" "}
-            <a href="/signup" className="text-purple-400 underline">
+            <Link to="/signup" className="text-purple-400 underline">
               Sign up
-            </a>
+            </Link>
           </p>
 
           <div className="flex items-center my-4">
