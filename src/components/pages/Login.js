@@ -9,16 +9,21 @@ import SubmitButton from "../Froms/SubmitButton";
 import FacebookButton from "../Froms/FacebookButton";
 import ProjectName from "../NavigationComponents/ProjectName";
 import { FaEnvelope } from "react-icons/fa";
+import { axiosInstance } from "../../Network/axiosinstance";
+import Alert from "../alert";
+import { useNavigate } from "react-router-dom";
 
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const [errors, setErrors] = useState({});
+  const [loginError, setLoginError] = useState(null);
 
   const validateField = (name, value) => {
     switch (name) {
@@ -50,7 +55,7 @@ const Login = () => {
     Object.values(errors).every((e) => e === "") &&
     Object.values(formData).every((val) => val !== "");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = {};
@@ -60,15 +65,23 @@ const Login = () => {
     setErrors(newErrors);
 
     if (Object.values(newErrors).every((err) => err === "")) {
-      alert("Login successful!");
+      try {
+        const response = await axiosInstance.post("/accounts/API/Login/", formData);
+        const { token } = response.data;
+        localStorage.setItem("token", token);
+        console.log(token);
+        //navigate("/");
+      } catch (error) {
+        const errMsg = error.response?.data?.message || "Login failed. Check Your Email or Password.";
+        setLoginError(errMsg);
+      }
     }
   };
 
   const inputClass = (field) =>
-    `w-full px-3 py-2 rounded-lg bg-[#374252] text-white border pr-10 ${
-      errors[field]
-        ? "border-red-500"
-        : formData[field]
+    `w-full px-3 py-2 rounded-lg bg-[#374252] text-white border pr-10 ${errors[field]
+      ? "border-red-500"
+      : formData[field]
         ? "border-green-500"
         : "border-gray-600"
     }`;
@@ -80,6 +93,11 @@ const Login = () => {
       </div>
 
       <FormWrapper title="Welcome Back" subtitle="Sign in to your account">
+        {loginError && (
+          <div className="mb-4">
+            <Alert message={loginError} onClose={() => setLoginError(null)} />
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           {/* Email */}
           <FormFieldWrapper>
