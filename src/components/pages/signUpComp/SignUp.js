@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import FormWrapper from "../Froms/FormWrapper";
-import FormFieldWrapper from "../Froms/FormFieldWrapper";
-import Label from "../Froms/Label";
-import ErrorMessage from "../Froms/ErrorMessage";
-import ShowHidePassword from "../Froms/ShowHidePassword";
-import SubmitButton from "../Froms/SubmitButton";
-import FacebookButton from "../Froms/FacebookButton";
-import ProjectName from "../NavigationComponents/ProjectName";
-import FileUploader from "../Froms/FileUploader";
+import FormWrapper from "../../Froms/FormWrapper";
+import FormFieldWrapper from "../../Froms/FormFieldWrapper";
+import Label from "../../Froms/Label";
+import ErrorMessage from "../../Froms/ErrorMessage";
+import ShowHidePassword from "../../Froms/ShowHidePassword";
+import SubmitButton from "../../Froms/SubmitButton";
+import FacebookButton from "../../Froms/FacebookButton";
+import ProjectName from "../../NavigationComponents/ProjectName";
+import FileUploader from "../../Froms/FileUploader";
+import Alert from "../../alert"; // Adjust the path if needed
+import { axiosInstance } from "../../../Network/axiosinstance"; // Adjust the path if needed
 import { FaUser, FaEnvelope, FaLock, FaPhone } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
+// Validators
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const validateName = (name) => /^\S+$/.test(name);
-const validatePhone = (phone) => /^\+?\d{10,15}$/.test(phone);
+const validatePhone = (phone) => /^(010|011|012|015)\d{8}$/.test(phone);
 const validatePassword = (password) =>
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
@@ -28,8 +32,10 @@ const SignUp = () => {
     confirmPassword: "",
     termsAccepted: false,
   });
-
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const validateField = (name, value) => {
     switch (name) {
@@ -71,7 +77,7 @@ const SignUp = () => {
     const { name, value, type, checked, files } = e.target;
     const val = type === "checkbox" ? checked : type === "file" ? files[0] : value;
 
-    setFormData({ ...formData, [name]: val });
+    setFormData((prev) => ({ ...prev, [name]: val }));
 
     const errorMsg = validateField(name, val);
     setErrors((prev) => ({
@@ -89,24 +95,48 @@ const SignUp = () => {
       ([key, val]) => (key === "profilePicture" ? val !== null : val !== "" && val !== false)
     );
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
     Object.keys(formData).forEach((key) => {
       newErrors[key] = validateField(key, formData[key]);
     });
     setErrors(newErrors);
+    setServerError("");
 
     if (Object.values(newErrors).every((err) => err === "")) {
-      alert("Sign up successful!");
+      const submissionData = new FormData();
+      submissionData.append("first_name", formData.firstName);
+      submissionData.append("last_name", formData.lastName);
+      submissionData.append("email", formData.email);
+      submissionData.append("phone", formData.phone);
+      submissionData.append("password", formData.password);
+      submissionData.append("confirm_password", formData.confirmPassword);
+      submissionData.append("image", formData.profilePicture);
+
+      try {
+        const response = await axiosInstance.post("/accounts/API/register/", submissionData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+          navigate("/email-verification");
+      } catch (err) {
+        const data = err.response?.data;
+        if (typeof data === "object") {
+          const messages = Object.values(data).flat().join(" ");
+          setServerError(messages);
+        } else {
+          setServerError("Something went wrong during sign up.");
+        }
+      }
     }
   };
 
   const inputClass = (field) =>
-    `w-full px-3 py-2 rounded-lg bg-[#374252] text-white border pr-10 ${
-      errors[field]
-        ? "border-red-500"
-        : formData[field]
+    `w-full px-3 py-2 rounded-lg bg-[#374252] text-white border pr-10 ${errors[field]
+      ? "border-red-500"
+      : formData[field]
         ? "border-green-500"
         : "border-gray-600"
     }`;
@@ -117,6 +147,19 @@ const SignUp = () => {
         <ProjectName />
       </div>
 
+      {successMessage && (
+        <div className="w-full bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-2 rounded-lg flex items-center mb-4">
+          <button onClick={() => setSuccessMessage("")} className="mr-3">
+            <span className="text-green-700 font-bold">×</span>
+          </button>
+          <span>{successMessage}</span>
+        </div>
+      )}
+      {serverError && (
+        <div className="mb-4">
+          <Alert message={serverError} onClose={() => setServerError("")} />
+        </div>
+      )}
       <FormWrapper title="Create Account" subtitle="Join our community of innovators">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -182,7 +225,7 @@ const SignUp = () => {
                 name="phone"
                 id="phone"
                 type="tel"
-                placeholder="+201234567890"
+                placeholder="e.g. 01012345678"
                 value={formData.phone}
                 onChange={handleChange}
                 className={`${inputClass("phone")} pl-10`}
@@ -200,9 +243,7 @@ const SignUp = () => {
               onChange={handleChange}
               error={errors.profilePicture}
             />
-            {errors.profilePicture && (
-              <ErrorMessage message={errors.profilePicture} />
-            )}
+            {errors.profilePicture && <ErrorMessage message={errors.profilePicture} />}
           </FormFieldWrapper>
 
           {/* Password */}
