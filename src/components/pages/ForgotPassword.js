@@ -7,7 +7,7 @@ import SubmitButton from "../Froms/SubmitButton";
 import ProjectName from "../NavigationComponents/ProjectName";
 import { FaEnvelope } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa";
-
+import { Link } from "react-router-dom";
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const ForgotPassword = () => {
@@ -36,7 +36,6 @@ const ForgotPassword = () => {
     } else {
       setError("");
       alert("Reset link sent!");
-      // TODO: Call backend API to send reset email
     }
   };
 
@@ -76,10 +75,13 @@ const ForgotPassword = () => {
           <SubmitButton text="Send Reset Link" isLoading={false} disabled={!!error || !email} />
 
           <div className="text-center mt-4">
-            <a href="/login" className="text-purple-400 underline text-sm inline-flex items-center gap-1">
+            <Link
+              to="/login"
+              className="text-purple-400 underline text-sm inline-flex items-center gap-1"
+            >
               <FaArrowLeft className="text-xs" />
               Back to Login
-            </a>
+            </Link>
           </div>
         </form>
       </FormWrapper>
