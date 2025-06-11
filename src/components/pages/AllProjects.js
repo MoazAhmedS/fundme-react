@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
-import Navbar from "./components/NavigationComponents/Navbar";
-import Footer from "./components/NavigationComponents/Footer";
-import ProjectCard from "./components/ProjectCard";
-import Pagination from "./components/NavigationComponents/Pagination";
-import SearchBar from "./components/NavigationComponents/SearchBar";
-
+import Footer from "../NavigationComponents/Footer";
+import ProjectCard from "../ProjectCard";
+import Pagination from "../NavigationComponents/Pagination";
+import SearchBar from "../NavigationComponents/SearchBar";
+import Navbar from "../NavigationComponents/Navbar";
 function AllProjects() {
   const [projects, setProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
