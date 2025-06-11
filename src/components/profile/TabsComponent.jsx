@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import UserDataTab from './UserDataTab';
 import ProjectsTab from './ProjectsTab';
 import DonationsTab from './DonationsTab';
-
+import CategoriesTab from './CategoriesTab';
 const TabsComponent = () => {
   const [activeTab, setActiveTab] = useState('user-data');
 
@@ -55,6 +55,7 @@ const TabsComponent = () => {
         {activeTab === 'user-data' && <UserDataTab />}
         {activeTab === 'projects' && <ProjectsTab />}
         {activeTab === 'donations' && <DonationsTab />}
+          {activeTab === 'categories' && <CategoriesTab />} 
       </div>
     </div>
   );
