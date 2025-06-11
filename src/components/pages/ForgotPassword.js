@@ -5,37 +5,49 @@ import Label from "../Froms/Label";
 import ErrorMessage from "../Froms/ErrorMessage";
 import SubmitButton from "../Froms/SubmitButton";
 import ProjectName from "../NavigationComponents/ProjectName";
-import { FaEnvelope } from "react-icons/fa";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaEnvelope, FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { axiosInstance } from "../../Network/axiosinstance";
+import Alert from "../alert";
+
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [alertMsg, setAlertMsg] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setEmail(e.target.value);
-
-    if (!e.target.value) {
-      setError("Email is required");
-    } else if (!validateEmail(e.target.value)) {
-      setError("Invalid email format");
-    } else {
-      setError("");
-    }
+    if (!e.target.value) setError("Email is required");
+    else if (!validateEmail(e.target.value)) setError("Invalid email format");
+    else setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email) {
-      setError("Email is required");
-    } else if (!validateEmail(email)) {
-      setError("Invalid email format");
-    } else {
-      setError("");
-      alert("Reset link sent!");
+    if (!email) return setError("Email is required");
+    if (!validateEmail(email)) return setError("Invalid email format");
+
+    setError("");
+    setAlertMsg(null);
+    setLoading(true);
+
+    try {
+      const res = await axiosInstance.post("/accounts/API/forgot-password/", {
+        email,
+      });
+      const msg = res?.data?.message || "Reset link sent successfully!";
+      setAlertMsg({ type: "success", message: msg });
+      setEmail("");
+    } catch (err) {
+      const msg =
+        err.response?.data?.message || "Failed to send reset link. Please try again.";
+      setAlertMsg({ type: "error", message: msg });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,8 +65,14 @@ const ForgotPassword = () => {
         title="Forgot Password"
         subtitle="Enter your email address and we'll send you a reset link."
       >
+        {alertMsg && (
+          <Alert
+            message={alertMsg.message}
+            onClose={() => setAlertMsg(null)}
+          />
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-          {/* Email Address */}
           <FormFieldWrapper>
             <Label htmlFor="email">Email Address</Label>
             <div className="relative">
@@ -72,7 +90,11 @@ const ForgotPassword = () => {
             {error && <ErrorMessage message={error} />}
           </FormFieldWrapper>
 
-          <SubmitButton text="Send Reset Link" isLoading={false} disabled={!!error || !email} />
+          <SubmitButton
+            text="Send Reset Link"
+            isLoading={loading}
+            disabled={!!error || !email || loading}
+          />
 
           <div className="text-center mt-4">
             <Link
