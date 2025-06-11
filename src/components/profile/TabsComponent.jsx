@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import UserDataTab from './UserDataTab';
-
+import ProjectsTab from './ProjectsTab';
 
 const TabsComponent = () => {
   const [activeTab, setActiveTab] = useState('user-data');
@@ -52,7 +52,7 @@ const TabsComponent = () => {
       
       <div>
         {activeTab === 'user-data' && <UserDataTab />}
-         
+        {activeTab === 'projects' && <ProjectsTab />}
       </div>
     </div>
   );
