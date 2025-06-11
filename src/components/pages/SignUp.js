@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import FormWrapper from "../Froms/FormWrapper";
 import FormFieldWrapper from "../Froms/FormFieldWrapper";
 import Label from "../Froms/Label";
@@ -9,7 +10,6 @@ import FacebookButton from "../Froms/FacebookButton";
 import ProjectName from "../NavigationComponents/ProjectName";
 import FileUploader from "../Froms/FileUploader";
 import { FaUser, FaEnvelope, FaLock, FaPhone } from "react-icons/fa";
-
 
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 const validateName = (name) => /^\S+$/.test(name);
@@ -99,7 +99,6 @@ const SignUp = () => {
 
     if (Object.values(newErrors).every((err) => err === "")) {
       alert("Sign up successful!");
-      
     }
   };
 
@@ -194,16 +193,16 @@ const SignUp = () => {
 
           {/* Profile Picture */}
           <FormFieldWrapper>
-              <Label htmlFor="profilePicture">Profile Picture</Label>
-              <FileUploader
-                id="profilePicture"
-                name="profilePicture"
-                onChange={handleChange}
-                error={errors.profilePicture}
-              />
-              {errors.profilePicture && (
-                <ErrorMessage message={errors.profilePicture} />
-              )}
+            <Label htmlFor="profilePicture">Profile Picture</Label>
+            <FileUploader
+              id="profilePicture"
+              name="profilePicture"
+              onChange={handleChange}
+              error={errors.profilePicture}
+            />
+            {errors.profilePicture && (
+              <ErrorMessage message={errors.profilePicture} />
+            )}
           </FormFieldWrapper>
 
           {/* Password */}
@@ -222,18 +221,18 @@ const SignUp = () => {
 
           {/* Confirm Password */}
           <FormFieldWrapper>
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <ShowHidePassword
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Re-enter password"
-                  className={`${inputClass("confirmPassword")} pl-10`}
-                />
-                {errors.confirmPassword && (
-                  <ErrorMessage message={errors.confirmPassword} />
-                )}
+            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <ShowHidePassword
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Re-enter password"
+              className={`${inputClass("confirmPassword")} pl-10`}
+            />
+            {errors.confirmPassword && (
+              <ErrorMessage message={errors.confirmPassword} />
+            )}
           </FormFieldWrapper>
 
           {/* Terms */}
@@ -256,9 +255,9 @@ const SignUp = () => {
 
           <p className="text-sm text-white text-center mt-4">
             Already have an account?{" "}
-            <a href="/login" className="text-purple-400 underline">
+            <Link to="/login" className="text-purple-400 underline">
               Sign in
-            </a>
+            </Link>
           </p>
 
           <div className="flex items-center my-4">
