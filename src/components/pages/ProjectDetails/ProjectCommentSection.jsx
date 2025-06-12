@@ -9,7 +9,7 @@ const ProjectComment = ({ comment, onAddReply, depth = 0 }) => {
 
   const handleReplySubmit = async () => {
     if (!replyText.trim()) return;
-    
+
     try {
       setSubmitting(true);
       await onAddReply(comment.id, replyText);
@@ -52,7 +52,7 @@ const ProjectComment = ({ comment, onAddReply, depth = 0 }) => {
           </div>
         </div>
 
-        <div className="text-gray-200 mb-3 leading-relaxed">
+        <div className="text-white font-bold text-base mb-3 text-left leading-relaxed">
           {comment.comment}
         </div>
 
@@ -127,7 +127,6 @@ const ProjectCommentSection = ({ projectId }) => {
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Your specific token
   const AUTH_TOKEN = "98ab31bfe9196f9c17b5cc2c5c593585dec5401d";
 
   useEffect(() => {
@@ -150,15 +149,11 @@ const ProjectCommentSection = ({ projectId }) => {
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
-    
+
     try {
       setSubmitting(true);
       setError(null);
-      
-      console.log('Posting comment with token:', AUTH_TOKEN);
-      console.log('Project ID:', projectId);
-      console.log('Comment text:', newComment);
-      
+
       const response = await axios.post(
         `http://127.0.0.1:8000/comment/API/projects/${projectId}/comments/`,
         { comment: newComment },
@@ -170,14 +165,11 @@ const ProjectCommentSection = ({ projectId }) => {
         }
       );
 
-      console.log('Comment posted successfully:', response.data);
       await fetchComments();
       setNewComment("");
     } catch (error) {
       console.error('Error adding comment:', error);
-      console.error('Error response:', error.response?.data);
-      console.error('Error status:', error.response?.status);
-      
+
       if (error.response?.status === 401) {
         setError('Authentication failed. Token may be invalid.');
       } else if (error.response?.status === 403) {
@@ -196,10 +188,6 @@ const ProjectCommentSection = ({ projectId }) => {
     if (!replyText.trim()) return;
 
     try {
-      console.log('Posting reply with token:', AUTH_TOKEN);
-      console.log('Parent comment ID:', parentCommentId);
-      console.log('Reply text:', replyText);
-      
       const response = await axios.post(
         `http://127.0.0.1:8000/comment/API/comments/${parentCommentId}/reply/`,
         { comment: replyText },
@@ -211,12 +199,9 @@ const ProjectCommentSection = ({ projectId }) => {
         }
       );
 
-      console.log('Reply posted successfully:', response.data);
       await fetchComments();
     } catch (error) {
       console.error('Error adding reply:', error);
-      console.error('Error response:', error.response?.data);
-      
       if (error.response?.status === 401) {
         setError('Authentication failed when posting reply.');
       } else {
@@ -242,7 +227,7 @@ const ProjectCommentSection = ({ projectId }) => {
       {error && (
         <div className="bg-red-900/50 border border-red-700 text-red-200 p-3 rounded mb-4">
           {error}
-          <button 
+          <button
             onClick={() => setError(null)}
             className="ml-2 text-red-300 hover:text-white"
           >

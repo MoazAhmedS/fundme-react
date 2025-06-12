@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import ProgressBar from '../ProgressBar';
+import ProgressBar from '../../ProgressBar';
 import { Calendar, Target, TrendingUp } from 'lucide-react';
 
 const DonationCard = ({ project, setProject }) => {
   const [donationAmount, setDonationAmount] = useState('');
   const [error, setError] = useState('');
   const [daysLeft, setDaysLeft] = useState(0);
+  
+  // Track current donations in component state
   const [currentDonations, setCurrentDonations] = useState(project.current_donations || 0);
 
   useEffect(() => {
@@ -26,47 +28,57 @@ const DonationCard = ({ project, setProject }) => {
     }
   }, [project.end_date, setProject]);
 
-  const handleDonate = async () => {
-    if (!donationAmount || Number(donationAmount) <= 0) {
-      setError('Please enter a valid donation amount');
-      return;
-    }
+ const handleDonate = async () => {
+  if (!donationAmount || Number(donationAmount) <= 0) {
+    setError('Please enter a valid donation amount');
+    return;
+  }
 
-    try {
-      const response = await axios.post(
-        `http://127.0.0.1:8000/donation/API/projects/${project.id}/donate/`, 
-        { amount: Number(donationAmount) },
-        {
-          headers: {
-            Authorization: `Token 98ab31bfe9196f9c17b5cc2c5c593585dec5401d`,
-          }
+  try {
+    const response = await axios.post(
+      `http://127.0.0.1:8000/donation/API/projects/${project.id}/donate/`, 
+      { amount: Number(donationAmount) },
+      {
+        headers: {
+          Authorization: `Token 98ab31bfe9196f9c17b5cc2c5c593585dec5401d`,
         }
-      );
-
-      if (response.status === 200) {
-        const updatedAmount = Number(donationAmount);
-        const newTotal = currentDonations + updatedAmount;
-        
-        // Update local state immediately
-        setCurrentDonations(newTotal);
-
-        // Update parent state
-        setProject(prev => ({
-          ...prev,
-          current_donations: newTotal,
-          backers: (prev.backers || 0) + 1
-        }));
-
-        setDonationAmount('');
-        setError('');
-      } else {
-        setError('Failed to process donation');
       }
-    } catch (err) {
-      console.error('Error during donation:', err);
-      setError(err.response?.data?.detail || 'Failed to process donation');
+    );
+
+    // Check if response is successful
+    if (response.status >= 200 && response.status < 300) {
+      const updatedAmount = Number(donationAmount);
+      const newTotal = currentDonations + updatedAmount;
+      
+      // Update local state immediately
+      setCurrentDonations(newTotal);
+
+      // Clear error and donation amount
+      setDonationAmount('');
+      setError('');
+
+      // Update parent state
+      setProject((prev) => ({
+        ...prev,
+        current_donations: newTotal,
+        backers: (prev.backers || 0) + 1,
+      }));
+    } else {
+      throw new Error('Failed to process donation');
     }
-  };
+  } catch (err) {
+    console.error('Error during donation:', err);
+    setError(err.response?.data?.detail || 'Failed to process donation');
+  }
+};
+
+  // Effect to update parent state whenever `currentDonations` changes
+  useEffect(() => {
+    setProject((prev) => ({
+      ...prev,
+      current_donations: currentDonations
+    }));
+  }, [currentDonations, setProject]);
 
   // Calculate progress percentage using local state
   const progressPercentage = ((currentDonations / project.target) * 100).toFixed(2);
@@ -76,7 +88,6 @@ const DonationCard = ({ project, setProject }) => {
       <div className="mb-4">
         <div className="flex justify-between mb-2">
           <span className="text-gray-300">Progress</span>
-          <span className="text-gray-300">{progressPercentage}%</span>
         </div>
         <ProgressBar percentage={progressPercentage} />
       </div>

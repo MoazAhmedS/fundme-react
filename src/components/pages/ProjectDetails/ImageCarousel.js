@@ -1,6 +1,6 @@
 // ProjectImageCarousel.js
 import React from 'react';
-import ImageCarousel from '../imageSlider';
+import ImageCarousel from '../../imageSlider';
 
 const ProjectImageCarousel = ({ images }) => {
   const fullImageUrls = images.map(img => `http://127.0.0.1:8000${img.path}`);

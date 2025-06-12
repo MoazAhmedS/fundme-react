@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import ProjectDetails from "./components/ProjectDetails/ProjectDetails";
+import ProjectDetails from "./components/pages/ProjectDetails/ProjectDetails";
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-             <ProjectDetails projectId={2} />
+             <ProjectDetails projectId={1} />
     </div>
   );
 }

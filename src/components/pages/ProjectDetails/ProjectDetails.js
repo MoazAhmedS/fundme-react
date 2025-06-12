@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ArrowLeft, X, Star } from 'lucide-react';
-import Navbar from '../NavigationComponents/Navbar';
-import Footer from '../NavigationComponents/Footer';
+import Navbar from '../../NavigationComponents/Navbar';
+import Footer from '../../NavigationComponents/Footer';
 import ProjectInfo from './ProjectInfo';
 import RateProject from './RateProject';
 import ProjectImageCarousel from './ImageCarousel';

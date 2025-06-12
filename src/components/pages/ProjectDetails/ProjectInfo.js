@@ -1,7 +1,7 @@
 import React from 'react';
 import { Share2, Tag } from 'lucide-react';
-import Badge from '../ui/Badge/Badge';
-import StarRating from '../ui/rates';
+import Badge from '../../ui/Badge/Badge';
+import StarRating from '../../ui/rates';
 
 const ProjectInfo = ({ project }) => {
   // Remove duplicate tags
