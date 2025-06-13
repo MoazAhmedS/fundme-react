@@ -3,7 +3,8 @@ import UserDataTab from './UserDataTab';
 import ProjectsTab from './ProjectsTab';
 import DonationsTab from './DonationsTab';
 import CategoriesTab from './CategoriesTab';
-const TabsComponent = () => {
+
+const TabsComponent = ({ user, projects, donations }) => {
   const [activeTab, setActiveTab] = useState('user-data');
 
   return (
@@ -52,10 +53,10 @@ const TabsComponent = () => {
       </div>
       
       <div>
-        {activeTab === 'user-data' && <UserDataTab />}
-        {activeTab === 'projects' && <ProjectsTab />}
-        {activeTab === 'donations' && <DonationsTab />}
-          {activeTab === 'categories' && <CategoriesTab />} 
+        {activeTab === 'user-data' && <UserDataTab user={user} />}
+        {activeTab === 'projects' && <ProjectsTab projects={projects} />}
+        {activeTab === 'donations' && <DonationsTab donations={donations} />}
+        {activeTab === 'categories' && <CategoriesTab />} 
       </div>
     </div>
   );

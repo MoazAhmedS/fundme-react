@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import ProjectCard from '../ProjectCard';
+import ProjectCard from '../../ProjectCard';
 
 const ProjectsTab = () => {
   const [projects, setProjects] = useState([]);

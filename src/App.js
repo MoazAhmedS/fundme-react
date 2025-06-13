@@ -9,13 +9,14 @@ import ResetPassword from './components/pages/ResetPasswordComp/ResetPassword';
 import Login from './components/pages/Login';
 import CreateProject from './components/pages/CreateProject';
 import EmailResetNotice from './components/pages/ResetPasswordComp/emailReset';
-
+import Profile from './components/pages/profileComp/Profile';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
+          <Route path="/profile" element={<Profile/>}/>
           <Route path="/create-project" element={<CreateProject/>} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/activate/:uid/:token" element={<ActivateAccount />} />
