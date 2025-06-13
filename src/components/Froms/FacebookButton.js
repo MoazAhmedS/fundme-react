@@ -24,6 +24,7 @@ const FacebookButton = () => {
         navigate("/verify-email");
       } else if (token) {
         // Login success
+        localStorage.setItem("token", token);
         console.log("Facebook login successful:", res.data);
         navigate("/");
       } else {

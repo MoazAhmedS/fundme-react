@@ -161,7 +161,7 @@ const SignUp = () => {
         </div>
       )}
       <FormWrapper title="Create Account" subtitle="Join our community of innovators">
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* First Name */}
             <FormFieldWrapper>
