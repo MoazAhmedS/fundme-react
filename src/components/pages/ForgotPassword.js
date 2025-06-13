@@ -9,6 +9,7 @@ import { FaEnvelope, FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { axiosInstance } from "../../Network/axiosinstance";
 import Alert from "../alert";
+import FormInput from "../Froms/FormInput";
 
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -77,7 +78,7 @@ const ForgotPassword = () => {
             <Label htmlFor="email">Email Address</Label>
             <div className="relative">
               <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
+              <FormInput
                 type="email"
                 id="email"
                 name="email"

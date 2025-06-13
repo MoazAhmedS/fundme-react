@@ -12,6 +12,7 @@ import { FaEnvelope } from "react-icons/fa";
 import { axiosInstance } from "../../Network/axiosinstance";
 import Alert from "../alert";
 import { useNavigate } from "react-router-dom";
+import FormInput from "../Froms/FormInput";
 
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -104,7 +105,7 @@ const Login = () => {
             <Label htmlFor="email">Email Address</Label>
             <div className="relative">
               <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
+              <FormInput
                 name="email"
                 id="email"
                 type="email"
@@ -135,7 +136,7 @@ const Login = () => {
 
           <div className="flex justify-between items-center text-sm">
             <label className="flex items-center space-x-2 text-white">
-              <input type="checkbox" name="rememberMe" />
+              <FormInput type="checkbox" name="rememberMe" />
               <span>Remember me</span>
             </label>
 

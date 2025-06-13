@@ -13,6 +13,7 @@ import Alert from "../../alert"; // Adjust the path if needed
 import { axiosInstance } from "../../../Network/axiosinstance"; // Adjust the path if needed
 import { FaUser, FaEnvelope, FaLock, FaPhone } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import FormInput from "../../Froms/FormInput";
 
 // Validators
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -168,7 +169,7 @@ const SignUp = () => {
               <Label htmlFor="firstName">First Name</Label>
               <div className="relative">
                 <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
+                <FormInput
                   name="firstName"
                   id="firstName"
                   placeholder="e.g. John"
@@ -185,7 +186,7 @@ const SignUp = () => {
               <Label htmlFor="lastName">Last Name</Label>
               <div className="relative">
                 <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
+                <FormInput
                   name="lastName"
                   id="lastName"
                   placeholder="e.g. Doe"
@@ -203,7 +204,7 @@ const SignUp = () => {
             <Label htmlFor="email">Email Address</Label>
             <div className="relative">
               <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
+              <FormInput
                 name="email"
                 id="email"
                 type="email"
@@ -221,7 +222,7 @@ const SignUp = () => {
             <Label htmlFor="phone">Phone Number</Label>
             <div className="relative">
               <FaPhone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
+              <FormInput
                 name="phone"
                 id="phone"
                 type="tel"
@@ -229,6 +230,7 @@ const SignUp = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 className={`${inputClass("phone")} pl-10`}
+                maxlength="11"
               />
             </div>
             {errors.phone && <ErrorMessage message={errors.phone} />}
@@ -279,7 +281,7 @@ const SignUp = () => {
           {/* Terms */}
           <FormFieldWrapper>
             <label className="text-white flex items-center space-x-2">
-              <input
+              <FormInput
                 type="checkbox"
                 name="termsAccepted"
                 checked={formData.termsAccepted}

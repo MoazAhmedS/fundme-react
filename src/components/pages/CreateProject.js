@@ -11,6 +11,7 @@ import Alert from "../alert";
 import { FaCalendarAlt, FaPlus, FaTimes } from "react-icons/fa";
 import DateInput from "../Froms/DatePickerComponent";
 import GradientButton from "../GradientButton";
+import FormInput from "../Froms/FormInput";
 
 const CreateProject = () => {
   const navigate = useNavigate();
@@ -142,7 +143,7 @@ for (let [key, value] of payload.entries()) {
 
         <FormFieldWrapper>
           <Label htmlFor="title">Project Title</Label>
-          <input
+          <FormInput
             type="text"
             name="title"
             id="title"
@@ -180,7 +181,7 @@ for (let [key, value] of payload.entries()) {
 
         <FormFieldWrapper>
           <Label htmlFor="total_target">Target Amount ($)</Label>
-          <input
+          <FormInput
             type="number"
             name="total_target"
             value={form.total_target}
@@ -214,7 +215,7 @@ for (let [key, value] of payload.entries()) {
         <FormFieldWrapper>
           <Label>Tags</Label>
           <div className="flex gap-2">
-            <input
+            <FormInput
               type="text"
               value={form.tagInput}
               onChange={(e) =>
@@ -223,13 +224,13 @@ for (let [key, value] of payload.entries()) {
               className="flex-1 bg-[#374252] text-white rounded-lg px-4 py-2 border border-gray-600"
               placeholder="Add a tag"
             />
-            <GradientButton
+            <button
               type="button"
               onClick={handleAddTag}
               className="w-auto px-3 py-2 rounded-lg bg-gradient-to-r from-[#905fe8] to-[#2862eb] text-white"
             >
               <FaPlus />
-            </GradientButton>
+            </button>
           </div>
 
           <div className="flex gap-2 mt-2 flex-wrap">
