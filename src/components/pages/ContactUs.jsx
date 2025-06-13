@@ -1,8 +1,8 @@
 import Navbar from '../NavigationComponents/Navbar';
 import Footer from '../NavigationComponents/Footer';
-import ContactHeader from '../Contact/ContactHeader';
-import ContactMethods from '../Contact/ContactMethods'
-import FAQSection from '../Contact/FAQSection'
+import ContactHeader from './Contact/ContactHeader';
+import ContactMethods from './Contact/ContactMethods'
+import FAQSection from './Contact/FAQSection'
 const ContactUs = () => {
   return (
    <> 
