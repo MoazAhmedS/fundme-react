@@ -9,6 +9,7 @@ import DateInput from '../../Froms/DatePickerComponent';
 import FormFieldWrapper from '../../Froms/FormFieldWrapper';
 import ErrorMessage from '../../Froms/ErrorMessage';
 import Alert from '../../alert';
+import { useNavigate } from 'react-router-dom';
 
 const countries = [
   { code: '', name: 'Select Country:' },
@@ -34,6 +35,7 @@ const UserDataTab = ({ user }) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
   const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
@@ -200,12 +202,13 @@ const UserDataTab = ({ user }) => {
 
   const handleDeleteAccount = async (password) => {
     try {
-      await axiosInstance.delete('/accounts/api/profile/delete/', {
+      await axiosInstance.delete('/accounts/API/profile/delete/', {
         data: { password },
       });
       showAlert('Account deleted successfully', 'success');
+      localStorage.removeItem('token');
       setTimeout(() => {
-        window.location.href = '/login';
+          navigate('/');
       }, 2000);
     } catch (error) {
       showAlert('Failed to delete account. Please check your password and try again.', 'error');
