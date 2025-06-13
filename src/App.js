@@ -1,6 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
+import SignUp from './components/pages/signUpComp/SignUp';
+import { BrowserRouter, Routes , Route} from 'react-router-dom';
+import ActivateAccount from './components/pages/signUpComp/ActivateAccount';
+import EmailVerificationNotice from './components/pages/signUpComp/emailVerifiaction';
 import AllProjects from './components/pages/AllProjects';
+import Login from './components/pages/Login';
+import Home from './components/pages/Home';
 
 function App() {
   return (
@@ -20,6 +26,7 @@ function App() {
         </a>
       </header>
     </div>
+    
   );
 }
 
