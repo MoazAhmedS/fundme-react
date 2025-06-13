@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import FormWrapper from "../Froms/FormWrapper";
-import FormFieldWrapper from "../Froms/FormFieldWrapper";
-import Label from "../Froms/Label";
-import ErrorMessage from "../Froms/ErrorMessage";
-import SubmitButton from "../Froms/SubmitButton";
-import ProjectName from "../NavigationComponents/ProjectName";
+import FormWrapper from "../../Froms/FormWrapper";
+import FormFieldWrapper from "../../Froms/FormFieldWrapper";
+import Label from "../../Froms/Label";
+import ErrorMessage from "../../Froms/ErrorMessage";
+import SubmitButton from "../../Froms/SubmitButton";
+import ProjectName from "../../NavigationComponents/ProjectName";
 import { FaEnvelope, FaArrowLeft } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { axiosInstance } from "../../Network/axiosinstance";
-import Alert from "../alert";
-import FormInput from "../Froms/FormInput";
+import { Link , useNavigate} from "react-router-dom";
+import { axiosInstance } from "../../../Network/axiosinstance";
+import Alert from "../../alert";
+import FormInput from "../../Froms/FormInput";
 
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -18,6 +18,7 @@ const ForgotPassword = () => {
   const [error, setError] = useState("");
   const [alertMsg, setAlertMsg] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setEmail(e.target.value);
@@ -41,7 +42,7 @@ const ForgotPassword = () => {
         email,
       });
       const msg = res?.data?.message || "Reset link sent successfully!";
-      setAlertMsg({ type: "success", message: msg });
+      navigate("/email-reset-password")
       setEmail("");
     } catch (err) {
       const msg =

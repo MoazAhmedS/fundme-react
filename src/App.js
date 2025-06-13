@@ -4,10 +4,12 @@ import SignUp from './components/pages/signUpComp/SignUp';
 import { BrowserRouter, Routes , Route} from 'react-router-dom';
 import ActivateAccount from './components/pages/signUpComp/ActivateAccount';
 import EmailVerificationNotice from './components/pages/signUpComp/emailVerifiaction';
-import ForgotPassword from './components/pages/ForgotPassword';
-import ResetPassword from './components/pages/ResetPassword';
+import ForgotPassword from './components/pages/ResetPasswordComp/ForgotPassword';
+import ResetPassword from './components/pages/ResetPasswordComp/ResetPassword';
 import Login from './components/pages/Login';
 import CreateProject from './components/pages/CreateProject';
+import EmailResetNotice from './components/pages/ResetPasswordComp/emailReset';
+
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/activate/:uid/:token" element={<ActivateAccount />} />
           <Route path="/email-verification" element={<EmailVerificationNotice />} />
+          <Route path="/email-reset-password" element={<EmailResetNotice/>}/>
           <Route path="/login" element={<Login/>} />
           <Route path="/forgot-password" element={<ForgotPassword/>} />
           <Route path="/reset-password/:uidb64/:token" element={<ResetPassword />} />

@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import FormWrapper from "../Froms/FormWrapper";
-import FormFieldWrapper from "../Froms/FormFieldWrapper";
-import Label from "../Froms/Label";
-import ErrorMessage from "../Froms/ErrorMessage";
-import ShowHidePassword from "../Froms/ShowHidePassword";
-import SubmitButton from "../Froms/SubmitButton";
-import ProjectName from "../NavigationComponents/ProjectName";
+import FormWrapper from "../../Froms/FormWrapper";
+import FormFieldWrapper from "../../Froms/FormFieldWrapper";
+import Label from "../../Froms/Label";
+import ErrorMessage from "../../Froms/ErrorMessage";
+import ShowHidePassword from "../../Froms/ShowHidePassword";
+import SubmitButton from "../../Froms/SubmitButton";
+import ProjectName from "../../NavigationComponents/ProjectName";
 import { useParams, useNavigate } from "react-router-dom";
-import {axiosInstance} from "../../Network/axiosinstance";
-import Alert from "../alert";
+import {axiosInstance} from "../../../Network/axiosinstance";
+import Alert from "../../alert";
 
 const validatePassword = (password) =>
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
