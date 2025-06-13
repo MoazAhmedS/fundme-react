@@ -3,7 +3,7 @@ import ErrorMessage from '../../Froms/ErrorMessage';
 import FormFieldWrapper from '../../Froms/FormFieldWrapper';
 import Label from '../../Froms/Label';
 import ShowHidePassword from '../../Froms/ShowHidePassword';
-import Loader from '../../ui/loader/Loader'; // Import your CompLoader component
+import Loader from '../../ui/loader/Loader';
 
 const ChangePasswordDialog = ({ isOpen, onClose, onConfirm }) => {
   const [passwords, setPasswords] = useState({
@@ -15,24 +15,50 @@ const ChangePasswordDialog = ({ isOpen, onClose, onConfirm }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const validatePassword = (password) => {
-    // Minimum 8 characters, at least one letter and one number
     return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPasswords(prev => ({ ...prev, [name]: value }));
-    // Clear error when user types
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+  const { name, value } = e.target;
+
+  setPasswords(prev => {
+    const updated = { ...prev, [name]: value };
+
+    const newErrors = { ...errors };
+
+    if (name === 'old_password') {
+      newErrors.old_password = !value.trim() ? 'Current password is required' : '';
     }
-  };
+
+    if (name === 'new_password') {
+      if (!value.trim()) {
+        newErrors.new_password = 'New password is required';
+      } else if (!validatePassword(value)) {
+        newErrors.new_password = 'Password must be at least 8 characters with letters and numbers';
+      } else {
+        newErrors.new_password = '';
+      }
+
+      if (updated.confirm_new_password) {
+        newErrors.confirm_new_password =
+          value !== updated.confirm_new_password ? 'Passwords do not match' : '';
+      }
+    }
+
+    if (name === 'confirm_new_password') {
+      newErrors.confirm_new_password =
+        value !== updated.new_password ? 'Passwords do not match' : '';
+    }
+
+    setErrors(newErrors);
+    return updated;
+  });
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Validate passwords
     const newErrors = {};
     
     if (!passwords.old_password.trim()) {
@@ -57,7 +83,6 @@ const ChangePasswordDialog = ({ isOpen, onClose, onConfirm }) => {
     
     try {
       await onConfirm(passwords);
-      // Clear form on success
       setPasswords({
         old_password: '',
         new_password: '',
@@ -65,7 +90,6 @@ const ChangePasswordDialog = ({ isOpen, onClose, onConfirm }) => {
       });
       setErrors({});
     } catch (error) {
-      // Handle API errors
       if (error.response?.data?.old_password) {
         newErrors.old_password = error.response.data.old_password.join(' ');
       }
@@ -151,7 +175,7 @@ const ChangePasswordDialog = ({ isOpen, onClose, onConfirm }) => {
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:opacity-50 flex items-center justify-center min-w-[120px]"
             >
               {isLoading ? (
-                <Loader size={15} color="white" /> // Using your CompLoader component
+                <Loader size={15} color="white" /> 
               ) : (
                 'Change Password'
               )}

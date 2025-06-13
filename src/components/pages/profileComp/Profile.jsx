@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navigation from '../../NavigationComponents/Navbar';
 import TabsComponent from './TabsComponent';
 import { axiosInstance } from '../../../Network/axiosinstance';
@@ -7,6 +8,7 @@ import Loader from '../../ui/loader/Loader';
 const Profile = () => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axiosInstance.get('/accounts/API/profile/')
@@ -17,8 +19,11 @@ const Profile = () => {
       .catch(error => {
         console.error('Error fetching profile data:', error);
         setLoading(false);
+        if (error.response?.status === 401) {
+          navigate('/login');
+        }
       });
-  }, []);
+  }, [navigate]);
 
   if (loading) {
     return (
@@ -46,7 +51,6 @@ const Profile = () => {
           <h2 className="text-6xl font-bold text-white mb-2">Welcome, {user.first_name}</h2>
           <p className="text-gray-400 text-lg">Manage your account and projects</p>
         </div>
-
         <TabsComponent user={user} projects={projects} donations={donations} />
       </div>
     </div>

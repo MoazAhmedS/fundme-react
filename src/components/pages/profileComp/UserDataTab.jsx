@@ -8,6 +8,7 @@ import FormInput from '../../Froms/FormInput';
 import DateInput from '../../Froms/DatePickerComponent';
 import FormFieldWrapper from '../../Froms/FormFieldWrapper';
 import ErrorMessage from '../../Froms/ErrorMessage';
+import Alert from '../../alert';
 
 const countries = [
   { code: '', name: 'Select Country:' },
@@ -17,11 +18,10 @@ const countries = [
   { code: 'CA', name: 'Canada' },
 ];
 
-// Validation functions
 const validateName = (name) => /^[a-zA-Z]+$/.test(name);
 const validatePhone = (phone) => /^(010|011|012|015)\d{8}$/.test(phone);
 const validateUrl = (url) => {
-  if (!url) return true; // Empty is valid (optional field)
+  if (!url) return true;
   try {
     new URL(url);
     return /^(https?:\/\/)?(www\.)?facebook\.com\/.+$/.test(url);
@@ -51,6 +51,7 @@ const UserDataTab = ({ user }) => {
     facebookLink: '',
   });
   const [hasChanges, setHasChanges] = useState(false);
+  const [alert, setAlert] = useState({ show: false, message: '', type: 'error' });
   const originalUserData = useRef(null);
 
   useEffect(() => {
@@ -65,7 +66,7 @@ const UserDataTab = ({ user }) => {
         facebookLink: user.facebook || '',
         country: user.country || '',
         avatarInitials: initials,
-        avatarUrl: user.image || '',
+        avatarUrl: `http://localhost:8000${user.image}` || '',
       };
       
       setUserData(newUserData);
@@ -82,6 +83,11 @@ const UserDataTab = ({ user }) => {
       setHasChanges(changesDetected);
     }
   }, [userData]);
+
+  const showAlert = (message, type = 'error') => {
+    setAlert({ show: true, message, type });
+    setTimeout(() => setAlert({ ...alert, show: false }), 5000);
+  };
 
   const validateField = (name, value) => {
     let error = '';
@@ -133,117 +139,115 @@ const UserDataTab = ({ user }) => {
   };
 
   const handleSave = async () => {
-  if (!hasChanges) {
-    alert('No changes detected');
-    setIsEditing(false);
-    return;
-  }
-
-  if (!validateAllFields()) {
-    return;
-  }
-
-  try {
-    // First prepare the regular payload
-    const payload = {
-      first_name: userData.firstName,
-      last_name: userData.lastName,
-      phone: userData.phone,
-      birth_date: userData.birthDate || null,
-      facebook: userData.facebookLink || null,
-      country: userData.country || null,
-    };
-
-    // If there's a new avatar file, upload it first
-    if (userData.avatarFile) {
-      const formData = new FormData();
-      formData.append('image', userData.avatarFile);
-      
-      const avatarResponse = await axiosInstance.patch(
-        '/accounts/API/profile/edit/',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      );
-      
-      // Update the avatar URL in state if needed
-      if (avatarResponse.data.image_url) {
-        setUserData(prev => ({ 
-          ...prev, 
-          avatarUrl: avatarResponse.data.image_url,
-          avatarFile: null 
-        }));
-      }
+    if (!hasChanges) {
+      showAlert('No changes detected', 'info');
+      setIsEditing(false);
+      return;
     }
 
-    // Then update the profile data
-    await axiosInstance.patch('/accounts/API/profile/edit/', payload);
-    
-    // Update the original data reference
-    originalUserData.current = { 
-      ...userData,
-      avatarFile: null 
-    };
-    
-    alert('Profile updated successfully');
-    setIsEditing(false);
-  } catch (error) {
-    alert('Failed to update profile');
-    console.error(error);
-  }
-};
+    if (!validateAllFields()) {
+      showAlert('Please fix all errors before saving', 'error');
+      return;
+    }
+
+    try {
+      const payload = {
+        first_name: userData.firstName,
+        last_name: userData.lastName,
+        phone: userData.phone,
+        birth_date: userData.birthDate || null,
+        facebook: userData.facebookLink || null,
+        country: userData.country || null,
+      };
+
+      if (userData.avatarFile) {
+        const formData = new FormData();
+        formData.append('image', userData.avatarFile);
+        
+        const avatarResponse = await axiosInstance.patch(
+          '/accounts/API/profile/edit/',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        );
+        
+        if (avatarResponse.data.image_url) {
+          setUserData(prev => ({ 
+            ...prev, 
+            avatarUrl: avatarResponse.data.image_url,
+            avatarFile: null 
+          }));
+        }
+      }
+
+      await axiosInstance.patch('/accounts/API/profile/edit/', payload);
+      
+      originalUserData.current = { 
+        ...userData,
+        avatarFile: null 
+      };
+      
+      showAlert('Profile updated successfully', 'success');
+      setIsEditing(false);
+    } catch (error) {
+      showAlert('Failed to update profile. Please try again.', 'error');
+      console.error(error);
+    }
+  };
 
   const handleDeleteAccount = async (password) => {
     try {
       await axiosInstance.delete('/accounts/api/profile/delete/', {
         data: { password },
       });
-      alert('Account deleted');
-      window.location.href = '/login';
+      showAlert('Account deleted successfully', 'success');
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 2000);
     } catch (error) {
-      alert('Failed to delete account');
+      showAlert('Failed to delete account. Please check your password and try again.', 'error');
       console.error(error);
     }
   };
 
-  const handleChangePassword = async (passwords) => {
+const handleChangePassword = async (passwords) => {
     try {
-      // Implement change-password API if needed
-      alert('Password change logic not implemented');
+      await axiosInstance.patch('/accounts/API/profile/edit/', passwords);
+      showAlert('Password changed successfully','success');
+      setIsChangePasswordDialogOpen(false);
     } catch (error) {
-      alert('Failed to change password');
+      showAlert(error.response?.data?.message || 'Failed to change password');
       console.error(error);
     }
   };
 
   const handleAvatarChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    // Validate file type and size
-    if (!file.type.match('image.*')) {
-      alert('Please select an image file');
-      return;
-    }
-    if (file.size > 2 * 1024 * 1024) { // 2MB limit
-      alert('Image size should be less than 2MB');
-      return;
-    }
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.match('image.*')) {
+        showAlert('Please select an image file', 'error');
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) { 
+        showAlert('Image size should be less than 2MB', 'error');
+        return;
+      }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setUserData(prev => ({ 
-        ...prev, 
-        avatarUrl: reader.result,
-        avatarFile: file  // Store the file object for upload
-      }));
-      setHasChanges(true); // Mark that there are changes to save
-    };
-    reader.readAsDataURL(file);
-  }
-};
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUserData(prev => ({ 
+          ...prev, 
+          avatarUrl: reader.result,
+          avatarFile: file 
+        }));
+        setHasChanges(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <div className="rounded-lg text-left border border-gray-700 bg-gray-800 shadow-sm">
@@ -276,11 +280,21 @@ const UserDataTab = ({ user }) => {
       </div>
 
       <div className="p-6 pt-0 space-y-6">
+        {alert.show && (
+          <div className="mb-4">
+            <Alert 
+              message={alert.message} 
+              type={alert.type} 
+              onClose={() => setAlert({ ...alert, show: false })} 
+            />
+          </div>
+        )}
+
         <div className="flex items-center space-x-4">
           <div className="relative">
             <div className="relative flex h-24 w-24 shrink-0 overflow-hidden rounded-full bg-purple-600">
               {userData.avatarUrl ? (
-                <img src={`http://localhost:8000${userData.avatarUrl}`} alt="Profile" className="h-full w-full object-cover" />
+                <img src={userData.avatarUrl} alt="Profile" className="h-full w-full object-cover" />
               ) : (
                 <span className="flex h-full w-full items-center justify-center rounded-full text-xl text-white">
                   {userData.avatarInitials}
