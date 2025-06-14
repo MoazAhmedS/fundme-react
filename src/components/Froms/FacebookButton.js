@@ -17,7 +17,7 @@ const FacebookButton = () => {
         access_token: accessToken,
       });
 
-      const { token, message } = res.data;
+      const { token, user, message } = res.data;
 
       if (message) {
         // Account created but not verified
@@ -25,6 +25,8 @@ const FacebookButton = () => {
       } else if (token) {
         // Login success
         localStorage.setItem("token", token);
+        localStorage.setItem("fname", user.first_name);
+        localStorage.setItem("avatar", user.image);
         console.log("Facebook login successful:", res.data);
         navigate("/");
       } else {

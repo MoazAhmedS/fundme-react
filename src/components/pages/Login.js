@@ -68,10 +68,12 @@ const Login = () => {
     if (Object.values(newErrors).every((err) => err === "")) {
       try {
         const response = await axiosInstance.post("/accounts/API/Login/", formData);
-        const { token } = response.data;
+        const { token,user } = response.data;
         localStorage.setItem("token", token);
+        localStorage.setItem("fname", user.first_name);
+        localStorage.setItem("avatar", user.image);
         console.log(token);
-        //navigate("/");
+        navigate("/");
       } catch (error) {
         const errMsg = error.response?.data?.message || "Login failed. Check Your Email or Password.";
         setLoginError(errMsg);
