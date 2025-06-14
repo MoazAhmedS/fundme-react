@@ -47,8 +47,12 @@ const Profile = () => {
     <div className="min-h-screen bg-gray-900">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex flex-col items-start mb-8 mt-12">
-          <h2 className="text-6xl font-bold text-white mb-2">Welcome, {user.first_name}</h2>
-          <p className="text-gray-400 text-lg">Manage your account and projects</p>
+          <h2 className="text-6xl font-bold text-white mb-2">
+            Welcome, {user.first_name}
+            {user.is_superuser && (
+              <span className="text-red-500 ml-2">(Admin)</span>
+            )}
+          </h2>          <p className="text-gray-400 text-lg">Manage your account and projects</p>
         </div>
         <TabsComponent user={user} projects={projects} donations={donations} />
       </div>
