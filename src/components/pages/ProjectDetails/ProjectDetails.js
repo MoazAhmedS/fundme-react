@@ -21,8 +21,8 @@ const ProjectDetails = () => {
   const [refreshRatings, setRefreshRatings] = useState(0);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [alert, setAlert] = useState({ message: '', type: '' });
-  const [currentUser, setCurrentUser] = useState(null);
-
+  const [currentUser, setCurrentUser] = useState(null); // New state for current user
+  const Auth_Token = '98ab31bfe9196f9c17b5cc2c5c593585dec5401d';
   useEffect(() => {
     const fetchProject = async () => {
       try {
@@ -38,10 +38,11 @@ const ProjectDetails = () => {
 
     const fetchUser = async () => {
       try {
+        // Fetch current user info to determine permissions
         const token = localStorage.getItem('access_token');
         const userResponse = await axios.get(`http://127.0.0.1:8000/accounts/API/profile/`, {
           headers: {
-            'Authorization': `Token ${token}`
+            'Authorization': `Token ${Auth_Token}`
           }
         });
         setCurrentUser(userResponse.data.user);
@@ -58,7 +59,6 @@ const ProjectDetails = () => {
     setShowCancelDialog(true);
   };
 
-  const Auth_Token  = '98ab31bfe9196f9c17b5cc2c5c593585dec5401d';
   const handleConfirmCancel = async () => {
     try {
       const response = await axios.post(
@@ -118,6 +118,7 @@ const ProjectDetails = () => {
     );
   }
 
+  // Check if the current user is the creator of the project
   const isProjectCreator = currentUser && project && currentUser.id === project.user_id;
 
   return (
@@ -141,24 +142,29 @@ const ProjectDetails = () => {
             
             <ProjectInfo project={project} key={project.current_donations} />
 
-            {isProjectCreator && project.status && (
+            {project.status && (
               <div className="bg-gray-800/50 rounded-xl p-8 border border-gray-700 mb-8 shadow-lg">
                 <div className="flex gap-6">
-                  <button
-                    onClick={handleCancelProject}
-                    className="flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-medium transition-colors duration-200 text-lg"
-                  >
-                    <X className="w-5 h-5" />
-                    Cancel Project
-                  </button>
-                  
-                  <button
-                    onClick={handleMakeFeatured}
-                    className="flex items-center gap-3 bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-lg font-medium transition-colors duration-200 text-lg"
-                  >
-                    <Star className="w-5 h-5" />
-                    Make Featured
-                  </button>
+                 {currentUser && currentUser.user_info && currentUser.user_info.is_superuser && (
+  // Button shown only if the current user is a superuser
+  <button
+    onClick={handleMakeFeatured}
+    className="flex items-center gap-3 bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-lg font-medium transition-colors duration-200 text-lg"
+  >
+    <Star className="w-5 h-5" />
+    Make Featured
+  </button>
+)}
+
+                  {isProjectCreator && (
+                    <button
+                      onClick={handleCancelProject}
+                      className="flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-medium transition-colors duration-200 text-lg"
+                    >
+                      <X className="w-5 h-5" />
+                      Cancel Project
+                    </button>
+                  )}
                 </div>
               </div>
             )}
