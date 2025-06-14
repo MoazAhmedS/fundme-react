@@ -27,6 +27,7 @@ const FacebookButton = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("fname", user.first_name);
         localStorage.setItem("avatar", user.image);
+        localStorage.setItem("super", user.is_superuser);
         console.log("Facebook login successful:", res.data);
         navigate("/");
       } else {

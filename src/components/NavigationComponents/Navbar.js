@@ -49,6 +49,7 @@ function Navbar() {
     localStorage.removeItem("token");
     localStorage.removeItem("fname");
     localStorage.removeItem("avatar");
+    localStorage.removeItem("super");
     setUserData({
       token: null,
       fname: null,

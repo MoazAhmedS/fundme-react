@@ -28,7 +28,7 @@ export const CategoryCard = ({ category, projectsCount = 0 }) => {
 
   return (
     <div
-      className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-300 group hover:scale-105 cursor-pointer"
+      className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-all duration-300 group hover:scale-105"
       onClick={() => console.log(`Selected category: ${category.name}`)}
     >
       <div className="flex flex-col items-center text-center">
