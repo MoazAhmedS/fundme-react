@@ -9,6 +9,7 @@ import ProjectImageCarousel from './ImageCarousel';
 import ProjectRatings from './ProjectRatings';
 import DonationCard from './DonationCard';
 import ProjectCommentSection from './ProjectCommentSection';
+import ConfirmDialog from '../../ConfirmDialog';
 
 const ProjectDetails = ({ projectId }) => {
   const [project, setProject] = useState(null);
@@ -17,6 +18,7 @@ const ProjectDetails = ({ projectId }) => {
   const [userRating, setUserRating] = useState(0);
   const [reviewNote, setReviewNote] = useState("");
   const [refreshRatings, setRefreshRatings] = useState(0);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -39,10 +41,15 @@ const ProjectDetails = ({ projectId }) => {
     setRefreshRatings(prev => prev + 1);
   };
 
-  const handleCancelProject = async () => {
+  const handleCancelProject = () => {
+    setShowCancelDialog(true);
+  };
+
+  const handleConfirmCancel = async () => {
     try {
       console.log('Canceling project:', projectId);
       alert('Project canceled successfully');
+      setShowCancelDialog(false);
     } catch (error) {
       console.error('Error canceling project:', error);
       alert('Failed to cancel project');
@@ -146,9 +153,16 @@ const ProjectDetails = ({ projectId }) => {
         </div>
       </div>
 
+      {/* Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showCancelDialog}
+        onClose={() => setShowCancelDialog(false)}
+        onConfirm={handleConfirmCancel}
+        title="Cancel Project"
+        message="Are you sure you want to cancel this project? This action cannot be undone."
+      />
       <Footer className="bg-gray-900 border-t border-gray-700" />
     </div>
   );
-};
-
-export default ProjectDetails;
+}
+export default ProjectDetails;  
