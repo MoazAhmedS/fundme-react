@@ -27,10 +27,10 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/about" element={<AboutUs />} />
+            <Route path="/project" element={<AllProjects />} />
           </Route>
 
           <Route element={<WithNavOnly />}>
-            <Route path="/project" element={<AllProjects />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/create-project" element={<CreateProject />} />
           </Route>

@@ -52,7 +52,7 @@ function AllProjects() {
   }, []);
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen">
+    <div className="bg-gray-900 text-white min-h-screen pb-20">
       <div className="text-center pt-10">
         <h1 className="text-4xl font-bold ">
           Discover Amazing{" "}
@@ -109,7 +109,6 @@ function AllProjects() {
         />
       )}
 
-      <Footer />
     </div>
   );
 }
