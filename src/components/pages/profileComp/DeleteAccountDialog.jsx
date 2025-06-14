@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-
+import ShowHidePassword from '../../Froms/ShowHidePassword'
+import FormFieldWrapper from '../../Froms/FormFieldWrapper';
 const DeleteAccountDialog = ({ isOpen, onClose, onConfirm }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -28,27 +29,13 @@ const DeleteAccountDialog = ({ isOpen, onClose, onConfirm }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <FormFieldWrapper>
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
               Enter your password to confirm
             </label>
             <div className="relative">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
-              >
-                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-              </svg>
-              <input
+              <ShowHidePassword
                 type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
@@ -57,29 +44,9 @@ const DeleteAccountDialog = ({ isOpen, onClose, onConfirm }) => {
                 placeholder="Enter your password"
                 required
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-4 w-4"
-                >
-                  <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-              </button>
             </div>
           </div>
+          </FormFieldWrapper>
 
           <div className="flex justify-end space-x-2">
             <button
