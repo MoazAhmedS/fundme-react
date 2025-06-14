@@ -10,6 +10,7 @@ import Login from './components/pages/Login';
 import CreateProject from './components/pages/CreateProject';
 import EmailResetNotice from './components/pages/ResetPasswordComp/emailReset';
 import Profile from './components/pages/profileComp/Profile';
+import ProjectDetails from './components/pages/ProjectDetails/ProjectDetails';
 
 function App() {
   return (
@@ -23,8 +24,11 @@ function App() {
           <Route path="/email-verification" element={<EmailVerificationNotice />} />
           <Route path="/email-reset-password" element={<EmailResetNotice/>}/>
           <Route path="/login" element={<Login/>} />
+           <Route path="/details/:projectId" element={<ProjectDetails />} />
+          
           <Route path="/forgot-password" element={<ForgotPassword/>} />
           <Route path="/reset-password/:uidb64/:token" element={<ResetPassword />} />
+
         </Routes>
       </BrowserRouter>
       
