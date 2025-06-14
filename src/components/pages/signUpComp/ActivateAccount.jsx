@@ -4,6 +4,8 @@ import { axiosInstance } from '../../../Network/axiosinstance';
 import { FaCheckCircle, FaTimesCircle, FaSpinner } from 'react-icons/fa';
 
 const ActivateAccount = () => {
+    document.title = "Account Activation";
+  
   const { uid, token } = useParams();
   const navigate = useNavigate();
   const [message, setMessage] = useState("Activating your account...");

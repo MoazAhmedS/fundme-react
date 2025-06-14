@@ -7,6 +7,7 @@ import Navbar from "../NavigationComponents/Navbar";
 import { axiosInstance } from "../../Network/axiosinstance";
 
 function AllProjects() {
+  document.title = "Project";
   const [projects, setProjects] = useState([]);
   const [defaultProjects, setDefaultProjects] = useState([]);
   const [defaultTotalCount, setDefaultTotalCount] = useState(0);

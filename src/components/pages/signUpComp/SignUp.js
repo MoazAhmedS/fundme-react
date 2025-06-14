@@ -23,6 +23,8 @@ const validatePassword = (password) =>
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
 const SignUp = () => {
+    document.title = "Sign Up";
+  
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",

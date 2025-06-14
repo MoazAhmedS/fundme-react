@@ -14,6 +14,8 @@ import FormInput from "../../Froms/FormInput";
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const ForgotPassword = () => {
+    document.title = "Forgot Password";
+  
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [alertMsg, setAlertMsg] = useState(null);

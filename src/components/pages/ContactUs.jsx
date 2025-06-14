@@ -4,6 +4,7 @@ import ContactHeader from './Contact/ContactHeader';
 import ContactMethods from './Contact/ContactMethods'
 import FAQSection from './Contact/FAQSection'
 const ContactUs = () => {
+  document.title = "Contact Us";
   return (
    <> 
     <div className="min-h-screen bg-gray-900 text-white">

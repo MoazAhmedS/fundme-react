@@ -9,6 +9,7 @@ const Profile = () => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  document.title = "My Profile";
 
   useEffect(() => {
     axiosInstance.get('/accounts/API/profile/')

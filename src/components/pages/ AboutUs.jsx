@@ -8,6 +8,7 @@ import ImpactSection from './about/ImpactSection';
 import ValuesSection from './about/ValuesSection';
 
 const AboutUs = () => {
+  document.title = "About Us";
   return (
     <>
     <div className="min-h-screen bg-gray-900 text-white">

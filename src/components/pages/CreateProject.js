@@ -14,6 +14,8 @@ import GradientButton from "../GradientButton";
 import FormInput from "../Froms/FormInput";
 
 const CreateProject = () => {
+  document.title = "Create Project";
+  
   const navigate = useNavigate();
   const [form, setForm] = useState({
     title: "",

@@ -14,6 +14,8 @@ const validatePassword = (password) =>
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
 const ResetPassword = () => {
+      document.title = "Reset Password";
+    
     const [formData, setFormData] = useState({
         newPassword: "",
         confirmPassword: "",

@@ -9,6 +9,7 @@ import Loader from '../ui/loader/Loader'; // adjust path as needed
 import { CategoriesSection } from './HomeComp/CategoriesSection';
 import CallToJoin from './HomeComp/JoinUS';
 const Index = () => {
+    document.title = "Home";
     const [loadingTop, setLoadingTop] = useState(true);
     const [loadingLatest, setLoadingLatest] = useState(true);
     const [loadingFeatured, setLoadingFeatured] = useState(true);

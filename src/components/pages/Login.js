@@ -17,6 +17,8 @@ import FormInput from "../Froms/FormInput";
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const Login = () => {
+    document.title = "Login";
+  
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",

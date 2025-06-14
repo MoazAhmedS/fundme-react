@@ -25,7 +25,13 @@ const ProjectDetails = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const issuper = localStorage.getItem("super") === "true";
   const user_id = Number(localStorage.getItem("user_id"));
+  if(project){
+    document.title = project.title;
 
+  }else{
+      document.title = "Project Details";
+
+  }
   const [loadingRecommend, setLoadingRecommend] = useState(true);
   const [RecommendProjects, setRecommendProjects] = useState([]);
 

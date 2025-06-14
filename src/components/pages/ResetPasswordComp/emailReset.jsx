@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { FaEnvelopeOpenText } from "react-icons/fa";
 
 const EmailResetNotice = () => {
+    document.title = "Sending Reset Password";
+  
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-[#101827] text-white px-4">
       <div className="max-w-md w-full bg-[#1f2937] p-8 rounded-xl shadow-lg text-center">
