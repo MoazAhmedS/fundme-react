@@ -12,9 +12,11 @@ import Alert from '../../alert';
 import ImageCarousel from "../../imageSlider";
 import ProjectSlider from "../HomeComp/ProjectSliders";
 import Loader from "../../ui/loader/Loader";
-
+import { useNavigate } from 'react-router-dom';
 
 const ProjectDetails = () => {
+  const navigate = useNavigate();
+
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,11 +27,11 @@ const ProjectDetails = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const issuper = localStorage.getItem("super") === "true";
   const user_id = Number(localStorage.getItem("user_id"));
-  if(project){
+  if (project) {
     document.title = project.title;
 
-  }else{
-      document.title = "Project Details";
+  } else {
+    document.title = "Project Details";
 
   }
   const [loadingRecommend, setLoadingRecommend] = useState(true);
@@ -140,7 +142,8 @@ const ProjectDetails = () => {
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col">
       <div className="px-12 py-6 border-b border-gray-700">
-        <button className="flex items-center text-gray-400 hover:text-white transition-colors duration-200">
+        <button onClick={() => navigate('/project')}
+        className="flex items-center text-gray-400 hover:text-white transition-colors duration-200">
           <ArrowLeft className="w-5 h-5 mr-2" />
           Back to Projects
         </button>
