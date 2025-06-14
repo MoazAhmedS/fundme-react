@@ -2,9 +2,11 @@
 import React from "react";
 import { Rocket, Users, Target, ArrowRight } from "lucide-react";
 import GradientButton from "../../GradientButton";
+import { useNavigate } from 'react-router-dom';
 import { CTSCard } from "./CTSCard";
 
 const CallToJoin = () => {
+    const navigate = useNavigate();
     return (
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/50 via-gray-900 to-blue-900/50">
             <div className="max-w-7xl mx-auto">
@@ -19,7 +21,7 @@ const CallToJoin = () => {
                     </p>
                     <div className="flex justify-center">
 
-                        <GradientButton className="!w-fit group">
+                        <GradientButton className="!w-fit group" onClick={() => navigate("/login")}>
                             <span className="flex items-center">
                                 <Rocket className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
 

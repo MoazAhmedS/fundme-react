@@ -1,7 +1,10 @@
 import React from 'react';
 import GradientButton from '../../GradientButton';
 import { ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background gradient */}
@@ -28,7 +31,7 @@ const Hero = () => {
           </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <GradientButton className="!w-fit group">
+            <GradientButton className="!w-fit group" onClick={() => navigate("/login")}>
                 <span className="flex items-center">
                 Start Funding Now
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />

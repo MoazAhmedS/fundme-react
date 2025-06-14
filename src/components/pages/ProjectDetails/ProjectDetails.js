@@ -108,7 +108,7 @@ const ProjectDetails = () => {
       // Optimistically update the project state
       setProject(prev => ({
         ...prev,
-        is_featured: !prev.is_featured,
+        featured: !prev.featured,
       }));
 
     } catch (error) {
@@ -169,7 +169,7 @@ const ProjectDetails = () => {
                       className="flex items-center gap-3 bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-lg font-medium transition-colors duration-200 text-sm"
                     >
                       <Star className="w-5 h-5" />
-                      {project?.is_featured ? 'Remove Featured' : 'Make Featured'}
+                      {project?.featured ? 'Remove Featured' : 'Make Featured'}
                     </button>
                   )}
 

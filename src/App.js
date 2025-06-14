@@ -18,10 +18,13 @@ import ProjectDetails from './components/pages/ProjectDetails/ProjectDetails';
 import WithNav from './components/layout/WithNav';
 import WithNavOnly from './components/layout/WithNavOnly';
 import WithoutNav from './components/layout/WithoutNav';
+import ScrollToTop from './ScrollToTop';
+
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
+      <ScrollToTop /> 
         <Routes>
 
           <Route element={<WithNav />}>
