@@ -14,25 +14,40 @@ import Home from './components/pages/Home';
 import ContactUs from './components/pages/ContactUs';
 import AboutUs from './components/pages/ AboutUs';
 
+import WithNav from './components/layout/WithNav';
+import WithNavOnly from './components/layout/WithNavOnly';
+import WithoutNav from './components/layout/WithoutNav';
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          
-          <Route path="/" element={<Home />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/project" element={<AllProjects />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/create-project" element={<CreateProject />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/activate/:uid/:token" element={<ActivateAccount />} />
-          <Route path="/email-verification" element={<EmailVerificationNotice />} />
-          <Route path="/email-reset-password" element={<EmailResetNotice />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:uidb64/:token" element={<ResetPassword />} />
+
+          {/* Routes with Navbar + Footer */}
+          <Route element={<WithNav />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/about" element={<AboutUs />} />
+          </Route>
+
+          {/* Routes with Navbar only */}
+          <Route element={<WithNavOnly />}>
+            <Route path="/project" element={<AllProjects />} />
+
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/create-project" element={<CreateProject />} />
+          </Route>
+
+          {/* Routes without Navbar */}
+          <Route element={<WithoutNav />}>
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/activate/:uid/:token" element={<ActivateAccount />} />
+            <Route path="/email-verification" element={<EmailVerificationNotice />} />
+            <Route path="/email-reset-password" element={<EmailResetNotice />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:uidb64/:token" element={<ResetPassword />} />
+          </Route>
 
         </Routes>
       </BrowserRouter>

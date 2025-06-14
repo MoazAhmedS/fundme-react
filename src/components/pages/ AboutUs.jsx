@@ -10,7 +10,6 @@ import ValuesSection from './about/ValuesSection';
 const AboutUs = () => {
   return (
     <>
-     <Navbar/>
     <div className="min-h-screen bg-gray-900 text-white">
       <HeroSection />
       <MissionSection/>
@@ -18,7 +17,6 @@ const AboutUs = () => {
       <TeamSection/>
       <ValuesSection/>
     </div>
-     <Footer/>
     </>
   );
 };

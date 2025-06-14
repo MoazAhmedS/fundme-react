@@ -38,7 +38,6 @@ const Index = () => {
 
     return (
         <div className="min-h-screen bg-gray-900 text-white">
-            <Navbar />
             <Hero />
 
             {loadingTop ? (
@@ -83,7 +82,6 @@ const Index = () => {
 
             <CategoriesSection/>
             <CallToJoin />
-            <Footer />
         </div>
     );
 };

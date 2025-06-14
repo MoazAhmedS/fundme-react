@@ -45,7 +45,6 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <Navigation />
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex flex-col items-start mb-8 mt-12">
           <h2 className="text-6xl font-bold text-white mb-2">Welcome, {user.first_name}</h2>

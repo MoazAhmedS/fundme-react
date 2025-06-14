@@ -6,7 +6,6 @@ import FAQSection from './Contact/FAQSection'
 const ContactUs = () => {
   return (
    <> 
-    <Navbar/>
     <div className="min-h-screen bg-gray-900 text-white">
       <ContactHeader />
       <section className="py-16 px-4 sm:px-6 lg:px-8">
@@ -18,7 +17,6 @@ const ContactUs = () => {
         </div>
       </section>
     </div>
-    <Footer/>
     </>
   );
 };
