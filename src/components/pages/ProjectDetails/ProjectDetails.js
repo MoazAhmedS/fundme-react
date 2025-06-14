@@ -21,21 +21,37 @@ const ProjectDetails = () => {
   const [refreshRatings, setRefreshRatings] = useState(0);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [alert, setAlert] = useState({ message: '', type: '' });
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const fetchProject = async () => {
       try {
         const projectResponse = await axios.get(`http://127.0.0.1:8000/Project/API/${projectId}/`);
         setProject(projectResponse.data);
-        setLoading(false);
       } catch (error) {
         console.error(error);
         setFetchError("Failed to load project.");
+      } finally {
         setLoading(false);
       }
     };
 
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+        const userResponse = await axios.get(`http://127.0.0.1:8000/accounts/API/profile/`, {
+          headers: {
+            'Authorization': `Token ${token}`
+          }
+        });
+        setCurrentUser(userResponse.data.user);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
     fetchProject();
+    fetchUser();
   }, [projectId]);
 
   const handleCancelProject = () => {
@@ -45,7 +61,6 @@ const ProjectDetails = () => {
   const Auth_Token  = '98ab31bfe9196f9c17b5cc2c5c593585dec5401d';
   const handleConfirmCancel = async () => {
     try {
-      const token = localStorage.getItem('access_token');
       const response = await axios.post(
         `http://127.0.0.1:8000/Project/API/cancel/${projectId}/`,
         {},
@@ -103,8 +118,7 @@ const ProjectDetails = () => {
     );
   }
 
-  // Assume the user is the creator for testing purposes
-  const isProjectCreator = true;
+  const isProjectCreator = currentUser && project && currentUser.id === project.user_id;
 
   return (
     <div className="bg-gray-900 min-h-screen flex flex-col">
