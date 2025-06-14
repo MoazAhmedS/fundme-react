@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ProjectCard from '../../ProjectCard';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-const ProjectSlider = ({ title, subtitle, projects }) => {
+const ProjectSlider = ({ title, subtitle, projects, atTop = false }) => {
   const visibleCount = 3;
   const cardWidth = 350; // match ProjectCard width
   const gap = 24; // gap-6 in px
@@ -28,16 +28,38 @@ const ProjectSlider = ({ title, subtitle, projects }) => {
         {subtitle && <p className="text-lg text-gray-400 mb-10">{subtitle}</p>}
 
         <div className="relative flex items-center justify-center">
-          <button
-            onClick={handlePrev}
-            disabled={startIndex === 0}
-            className={`absolute left-[-50px] z-10 p-3 rounded-full transition
-              ${startIndex === 0 ? 'bg-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-white hover:text-black'}`}
-          >
-            <ArrowLeft size={24} />
-          </button>
+          {!atTop && (
+            <button
+              onClick={handlePrev}
+              disabled={startIndex === 0}
+              className={`absolute left-[-50px] z-10 p-3 rounded-full transition
+                ${startIndex === 0 ? 'bg-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-white hover:text-black'}`}
+            >
+              <ArrowLeft size={24} />
+            </button>
+          )}
 
           <div className="w-full max-w-[1100px] overflow-hidden">
+            {atTop && (
+              <div className="flex justify-between mb-4">
+                <button
+                  onClick={handlePrev}
+                  disabled={startIndex === 0}
+                  className={`p-3 rounded-full transition
+                    ${startIndex === 0 ? 'bg-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-white hover:text-black'}`}
+                >
+                  <ArrowLeft size={24} />
+                </button>
+                <button
+                  onClick={handleNext}
+                  disabled={startIndex === maxStartIndex}
+                  className={`p-3 rounded-full transition
+                    ${startIndex === maxStartIndex ? 'bg-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-white hover:text-black'}`}
+                >
+                  <ArrowRight size={24} />
+                </button>
+              </div>
+            )}
             <div
               className="flex gap-6 transition-transform duration-500 ease-in-out"
               style={{
@@ -53,14 +75,16 @@ const ProjectSlider = ({ title, subtitle, projects }) => {
             </div>
           </div>
 
-          <button
-            onClick={handleNext}
-            disabled={startIndex === maxStartIndex}
-            className={`absolute right-[-50px] z-10 p-3 rounded-full transition
-              ${startIndex === maxStartIndex ? 'bg-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-white hover:text-black'}`}
-          >
-            <ArrowRight size={24} />
-          </button>
+          {!atTop && (
+            <button
+              onClick={handleNext}
+              disabled={startIndex === maxStartIndex}
+              className={`absolute right-[-50px] z-10 p-3 rounded-full transition
+                ${startIndex === maxStartIndex ? 'bg-gray-500 cursor-not-allowed' : 'bg-gray-700 hover:bg-white hover:text-black'}`}
+            >
+              <ArrowRight size={24} />
+            </button>
+          )}
         </div>
       </div>
     </section>

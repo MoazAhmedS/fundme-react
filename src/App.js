@@ -13,6 +13,7 @@ import AllProjects from './components/pages/AllProjects';
 import Home from './components/pages/Home';
 import ContactUs from './components/pages/ContactUs';
 import AboutUs from './components/pages/ AboutUs';
+import ProjectDetails from './components/pages/ProjectDetails/ProjectDetails';
 
 import WithNav from './components/layout/WithNav';
 import WithNavOnly from './components/layout/WithNavOnly';
@@ -28,6 +29,7 @@ function App() {
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/about" element={<AboutUs />} />
             <Route path="/project" element={<AllProjects />} />
+            <Route path="/project/:projectId" element={<ProjectDetails />} />
           </Route>
 
           <Route element={<WithNavOnly />}>

@@ -3,6 +3,7 @@ import { Calendar, Wallet } from "lucide-react";
 import GradientButton from "./GradientButton";
 import ProgressBar from "./ProgressBar";
 import StarRating from "./ui/rates"; // correct import path
+import { useNavigate } from "react-router-dom";
 
 function getRemainingDays(endDate) {
   const diff = Math.ceil((new Date(endDate) - new Date()) / (1000 * 60 * 60 * 24));
@@ -11,6 +12,8 @@ function getRemainingDays(endDate) {
 }
 
 const ProjectCard = ({ project }) => {
+  const navigate = useNavigate();
+  
   return (
     <div className="bg-gray-800/50 text-white rounded-xl shadow-lg overflow-hidden max-w-sm w-full transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:bg-gray-800/70">
       <img src={`http://localhost:8000${project.images[0].path}`} alt={project.title} className="w-full h-48 object-cover" />
@@ -69,7 +72,7 @@ const ProjectCard = ({ project }) => {
           </div>
         </div>
 
-        <GradientButton onClick={() => alert("Funding project")}>
+        <GradientButton onClick={() => navigate(`/project/${project.id}`)}>
           Fund This Project
         </GradientButton>
       </div>

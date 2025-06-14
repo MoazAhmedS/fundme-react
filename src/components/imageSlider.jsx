@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const ImageCarousel = ({ images = [], autoPlay = true, interval = 3000 }) => {
     const [current, setCurrent] = useState(0);
     const length = images.length;
-
+    console.log(images);
     useEffect(() => {
         if (!autoPlay) return;
         const timer = setInterval(() => {
@@ -24,7 +24,7 @@ const ImageCarousel = ({ images = [], autoPlay = true, interval = 3000 }) => {
                 {images.map((img, idx) => (
                     <img
                         key={idx}
-                        src={img}
+                        src={`http://localhost:8000/${img.path}`}
                         alt={`slide-${idx}`}
                         className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${idx === current ? "opacity-100 z-10" : "opacity-0 z-0"
                             }`}

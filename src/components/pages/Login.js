@@ -73,6 +73,8 @@ const Login = () => {
         localStorage.setItem("fname", user.first_name);
         localStorage.setItem("avatar", user.image);
         localStorage.setItem("super", user.is_superuser);
+        localStorage.setItem("user_id", user.id);
+
         console.log(token);
         navigate("/");
       } catch (error) {
