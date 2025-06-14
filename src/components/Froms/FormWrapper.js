@@ -1,10 +1,17 @@
-const FormWrapper = ({ title, children }) => {
+import React from "react";
+
+const FormWrapper = ({ title, subtitle, children }) => {
   return (
-    <div className="max-w-md w-full bg-[#1a1a3b] text-white rounded-2xl shadow-lg p-8">
+    <div className="w-full max-w-md bg-[#17202f] p-8 rounded-2xl shadow-lg">
       {title && (
-        <h2 className="text-2xl font-semibold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-[#d14afb] to-[#6e8afb]">
+        <h2 className="text-2xl font-semibold text-white text-center">
           {title}
         </h2>
+      )}
+      {subtitle && (
+        <p className="text-sm text-[#8c94a2] text-center mt-1 mb-4">
+          {subtitle}
+        </p>
       )}
       {children}
     </div>
