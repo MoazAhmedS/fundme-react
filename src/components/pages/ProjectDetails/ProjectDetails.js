@@ -12,10 +12,11 @@ import Alert from '../../alert';
 import ImageCarousel from "../../imageSlider";
 import ProjectSlider from "../HomeComp/ProjectSliders";
 import Loader from "../../ui/loader/Loader";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const ProjectDetails = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
@@ -24,9 +25,11 @@ const ProjectDetails = () => {
   const [refreshRatings, setRefreshRatings] = useState(0);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [alert, setAlert] = useState({ message: '', type: '' });
+  const [alertDialog, setAlertDialog] = useState({ message: '', type: '' });
   const [currentUser, setCurrentUser] = useState(null);
   const issuper = localStorage.getItem("super") === "true";
   const user_id = Number(localStorage.getItem("user_id"));
+  const isLoggedIn = !!localStorage.getItem("token");
   if (project) {
     document.title = project.title;
 
@@ -40,15 +43,17 @@ const ProjectDetails = () => {
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const [projectRes, userRes, similarRes] = await Promise.all([
+        const [projectRes, similarRes] = await Promise.all([
           axiosInstance.get(`Project/API/${projectId}/`),
-          axiosInstance.get(`accounts/API/profile/`),
           axiosInstance.get(`Project/API/${projectId}/similar/`)
         ]);
 
         setProject(projectRes.data);
-        setCurrentUser(userRes.data.user);
         setRecommendProjects(similarRes.data.similar_projects);
+        if (isLoggedIn) {
+          const userRes = await axiosInstance.get(`accounts/API/profile/`);
+          setCurrentUser(userRes.data.user);
+        }
       } catch (err) {
         console.error("Fetch error:", err);
         setFetchError("Failed to load project or related data.");
@@ -61,7 +66,6 @@ const ProjectDetails = () => {
     fetchAll();
   }, [projectId]);
 
-  console.log("hh", RecommendProjects);
   const handleCancelProject = () => {
     setShowCancelDialog(true);
   };
@@ -76,20 +80,20 @@ const ProjectDetails = () => {
       console.log('API Response:', response.data);
 
       if (response.data.success) {
-        setAlert({ message: response.data.message, type: 'success' });
+        setAlertDialog({ message: response.data.message, type: 'success' });
         setProject((prev) => ({ ...prev, status: false }));
         setShowCancelDialog(false);
       } else {
-        setAlert({ message: response.data.message, type: 'error' });
+        setAlertDialog({ message: response.data.message, type: 'error' });
       }
     } catch (error) {
       console.error('Error canceling project:', error);
 
       if (error.response && error.response.data) {
         console.error('Error response data:', error.response.data);
-        setAlert({ message: error.response.data.message, type: 'error' });
+        setAlertDialog({ message: error.response.data.message, type: 'error' });
       } else {
-        setAlert({ message: 'Failed to cancel project', type: 'error' });
+        setAlertDialog({ message: 'Failed to cancel project', type: 'error' });
       }
     }
   };
@@ -105,7 +109,6 @@ const ProjectDetails = () => {
         type: 'success'
       });
 
-      // Optimistically update the project state
       setProject(prev => ({
         ...prev,
         featured: !prev.featured,
@@ -143,7 +146,7 @@ const ProjectDetails = () => {
     <div className="bg-gray-900 min-h-screen flex flex-col">
       <div className="px-12 py-6 border-b border-gray-700">
         <button onClick={() => navigate('/project')}
-        className="flex items-center text-gray-400 hover:text-white transition-colors duration-200">
+          className="flex items-center text-gray-400 hover:text-white transition-colors duration-200">
           <ArrowLeft className="w-5 h-5 mr-2" />
           Back to Projects
         </button>
@@ -189,8 +192,9 @@ const ProjectDetails = () => {
 
             <RateProject
               projectId={project.id}
-              userId={project.user_id}
+              isAuthenticated={isLoggedIn}
               onRatingSubmitted={() => setRefreshRatings(prev => prev + 1)}
+              onRequireLogin={() => navigate("/login", { state: { from: location.pathname } })}
             />
 
             <ProjectRatings
@@ -199,7 +203,11 @@ const ProjectDetails = () => {
             />
 
             <div className="bg-gray-800/50 rounded-xl p-8 border border-gray-700 mb-8 shadow-lg">
-              <ProjectCommentSection projectId={project.id} />
+              <ProjectCommentSection
+                isAuthenticated={isLoggedIn}
+                projectId={project.id}
+                onRequireLogin={() => navigate("/login", { state: { from: location.pathname } })}
+              />
             </div>
             <div className="bg-gray-800/50 rounded-xl  border border-gray-700 mb-8 shadow-lg">
               {loadingRecommend ? (
@@ -224,6 +232,8 @@ const ProjectDetails = () => {
               <DonationCard
                 project={project}
                 setProject={setProject}
+                isAuthenticated={isLoggedIn}
+                onRequireLogin={() => navigate("/login", { state: { from: location.pathname } })}
               />
             </div>
           </div>
@@ -236,7 +246,20 @@ const ProjectDetails = () => {
         onConfirm={handleConfirmCancel}
         title="Cancel Project"
         message="Are you sure you want to cancel this project? This action cannot be undone."
+        alert={alertDialog}
+        setAlert={setAlertDialog}
       />
+      {!isLoggedIn && (
+        <div className="fixed bottom-0 left-0 w-full bg-red-600 text-white text-center py-4 shadow-lg z-50">
+          <span>You must be logged in to interact with this project. </span>
+          <button
+            onClick={() => navigate("/login")}
+            className="underline font-semibold ml-2 hover:text-gray-200"
+          >
+            Login Now
+          </button>
+        </div>
+      )}
     </div>
   );
 };

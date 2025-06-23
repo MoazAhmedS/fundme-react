@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import FormWrapper from "../Froms/FormWrapper";
 import FormFieldWrapper from "../Froms/FormFieldWrapper";
@@ -11,22 +11,35 @@ import ProjectName from "../NavigationComponents/ProjectName";
 import { FaEnvelope } from "react-icons/fa";
 import { axiosInstance } from "../../Network/axiosinstance";
 import Alert from "../alert";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import FormInput from "../Froms/FormInput";
 
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const Login = () => {
-    document.title = "Login";
-  
+  document.title = "Login";
+
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+
   const [errors, setErrors] = useState({});
   const [loginError, setLoginError] = useState(null);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    } else {
+      setIsCheckingAuth(false);
+    }
+  }, [navigate]);
 
   const validateField = (name, value) => {
     switch (name) {
@@ -70,15 +83,15 @@ const Login = () => {
     if (Object.values(newErrors).every((err) => err === "")) {
       try {
         const response = await axiosInstance.post("/accounts/API/Login/", formData);
-        const { token,user } = response.data;
+        const { token, user } = response.data;
         localStorage.setItem("token", token);
         localStorage.setItem("fname", user.first_name);
         localStorage.setItem("avatar", user.image);
         localStorage.setItem("super", user.is_superuser);
         localStorage.setItem("user_id", user.id);
 
-        console.log(token);
-        navigate("/");
+        const from = location.state?.from || "/";
+        navigate(from);
       } catch (error) {
         const errMsg = error.response?.data?.message || "Login failed. Check Your Email or Password.";
         setLoginError(errMsg);
@@ -93,7 +106,9 @@ const Login = () => {
         ? "border-green-500"
         : "border-gray-600"
     }`;
-
+  if (isCheckingAuth) {
+    return null;
+  }
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#101827] px-4">
       <div className="mt-8 mb-6">

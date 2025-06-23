@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import { FaFacebook } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { axiosInstance } from "../../Network/axiosinstance"; // adjust path
-import Alert from "../alert"; // adjust if stored elsewhere
+import { useNavigate,useLocation } from "react-router-dom";
+import { axiosInstance } from "../../Network/axiosinstance"; 
+import Alert from "../alert"; 
 
 const FacebookButton = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [alertMessage, setAlertMessage] = useState("");
 
   const handleFacebookResponse = async (response) => {
@@ -20,10 +22,8 @@ const FacebookButton = () => {
       const { token, user, message } = res.data;
 
       if (message) {
-        // Account created but not verified
         navigate("/verify-email");
       } else if (token) {
-        // Login success
         localStorage.setItem("token", token);
         localStorage.setItem("fname", user.first_name);
         localStorage.setItem("avatar", user.image);
@@ -31,7 +31,8 @@ const FacebookButton = () => {
         localStorage.setItem("user_id", user.id);
 
         console.log("Facebook login successful:", res.data);
-        navigate("/");
+        const from = location.state?.from || "/";
+        navigate(from);
       } else {
         setAlertMessage("Unexpected response from server.");
       }

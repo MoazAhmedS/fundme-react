@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance } from "../../../Network/axiosinstance";
 import { MessageCircle, User } from 'lucide-react';
+import Alert from '../../alert';
 
 const UserAvatar = ({ user }) => {
   if (!user) {
@@ -28,12 +29,13 @@ const UserAvatar = ({ user }) => {
   );
 };
 
-const ProjectComment = ({ comment, onAddReply, depth = 0 }) => {
+const ProjectComment = ({ comment, onAddReply, depth = 0, isAuthenticated }) => {
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const handleReplySubmit = async () => {
+    if (!isAuthenticated) return;
     if (!replyText.trim()) return;
 
     try {
@@ -68,7 +70,7 @@ const ProjectComment = ({ comment, onAddReply, depth = 0 }) => {
           <UserAvatar user={comment.user} />
           <div className="flex justify-between items-center w-full">
             <span className="text-white font-medium">
-              {comment.user?.first_name || 'You'} {comment.user?.last_name || ''}
+              {comment.user?.first_name || 'Anonymous'} {comment.user?.last_name || ''}
             </span>
             <span className="text-gray-400 text-sm">
               {formatDate(comment.created_date)}
@@ -83,8 +85,18 @@ const ProjectComment = ({ comment, onAddReply, depth = 0 }) => {
         {depth < maxDepth && (
           <div className="flex items-center gap-4">
             <button
-              onClick={() => setShowReplyInput(!showReplyInput)}
-              className="flex items-center gap-2 text-gray-400 hover:text-purple-400 text-sm transition-colors"
+              onClick={() => {
+                if (!isAuthenticated) {
+                  onAddReply(null, null, true); // Trigger login requirement
+                  return;
+                }
+                setShowReplyInput(!showReplyInput);
+              }}
+              className={`flex items-center gap-2 text-sm transition-colors ${
+                isAuthenticated 
+                  ? 'text-gray-400 hover:text-purple-400' 
+                  : 'text-gray-600 cursor-not-allowed'
+              }`}
             >
               <MessageCircle className="w-4 h-4" />
               Reply
@@ -97,7 +109,7 @@ const ProjectComment = ({ comment, onAddReply, depth = 0 }) => {
           </div>
         )}
 
-        {showReplyInput && (
+        {showReplyInput && isAuthenticated && (
           <div className="mt-4 space-y-3">
             <textarea
               className="w-full p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-purple-500 focus:outline-none resize-none"
@@ -136,6 +148,7 @@ const ProjectComment = ({ comment, onAddReply, depth = 0 }) => {
               comment={reply}
               onAddReply={onAddReply}
               depth={depth + 1}
+              isAuthenticated={isAuthenticated}
             />
           ))}
         </div>
@@ -144,12 +157,13 @@ const ProjectComment = ({ comment, onAddReply, depth = 0 }) => {
   );
 };
 
-const ProjectCommentSection = ({ projectId }) => {
+const ProjectCommentSection = ({ projectId, isAuthenticated, onRequireLogin }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [loginAlert, setLoginAlert] = useState(null);
 
   useEffect(() => {
     fetchComments();
@@ -197,13 +211,21 @@ const ProjectCommentSection = ({ projectId }) => {
   };
 
   const handleAddComment = async () => {
+    if (!isAuthenticated) {
+      onRequireLogin();
+      setLoginAlert({
+        message: 'You need to login to post a comment',
+        type: 'warning'
+      });
+      return;
+    }
+
     if (!newComment.trim()) return;
 
     try {
       setSubmitting(true);
       setError(null);
 
-      // Optimistically update the UI with proper user structure
       const tempComment = {
         id: Date.now(),
         user: {
@@ -225,7 +247,6 @@ const ProjectCommentSection = ({ projectId }) => {
         { comment: newComment }
       );
 
-      // Replace the temporary comment with the real one
       setComments(prev => prev.map(c =>
         c.id === tempComment.id ? response.data : c
       ));
@@ -234,11 +255,10 @@ const ProjectCommentSection = ({ projectId }) => {
     } catch (error) {
       console.error('Error adding comment:', error);
 
-      // Remove the temporary comment if the request failed
       setComments(prev => prev.filter(c => c.id !== Date.now()));
 
       if (error.response?.status === 401) {
-        setError('Authentication failed. Token may be invalid.');
+        setError('Authentication failed. Please login again.');
       } else if (error.response?.status === 403) {
         setError('You do not have permission to comment on this project.');
       } else if (error.response?.status === 404) {
@@ -251,11 +271,20 @@ const ProjectCommentSection = ({ projectId }) => {
     }
   };
 
-  const handleAddReply = async (parentCommentId, replyText) => {
+  const handleAddReply = async (parentCommentId, replyText, requireLogin = false) => {
+    if (requireLogin) {
+      onRequireLogin();
+      setLoginAlert({
+        message: 'You need to login to post a reply',
+        type: 'warning'
+      });
+      return;
+    }
+
+    if (!isAuthenticated) return;
     if (!replyText.trim()) return;
 
     try {
-      // Optimistically update the UI with proper user structure
       const tempReply = {
         id: Date.now(),
         user: {
@@ -277,7 +306,6 @@ const ProjectCommentSection = ({ projectId }) => {
         { comment: replyText }
       );
 
-      // Replace the temporary reply with the real one
       setComments(prev => {
         const updateComments = (comments) => {
           return comments.map(comment => {
@@ -295,7 +323,6 @@ const ProjectCommentSection = ({ projectId }) => {
     } catch (error) {
       console.error('Error adding reply:', error);
 
-      // Remove the temporary reply if the request failed
       setComments(prev => {
         const removeTempReply = (comments) => {
           return comments.map(comment => {
@@ -339,6 +366,16 @@ const ProjectCommentSection = ({ projectId }) => {
         Comments ({comments.length})
       </h2>
 
+      {loginAlert && (
+        <div className="mb-4">
+          <Alert 
+            message={loginAlert.message} 
+            type={loginAlert.type} 
+            onClose={() => setLoginAlert(null)} 
+          />
+        </div>
+      )}
+
       {error && (
         <div className="bg-red-900/50 border border-red-700 text-red-200 p-3 rounded mb-4">
           {error}
@@ -354,20 +391,35 @@ const ProjectCommentSection = ({ projectId }) => {
       <div className="mb-8">
         <div className="flex gap-3">
           <textarea
-            className="flex-1 p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:border-purple-500 focus:outline-none resize-none"
-            placeholder="Write a comment about this project..."
+            className={`flex-1 p-3 rounded-lg text-white placeholder-gray-400 border focus:outline-none resize-none ${
+              isAuthenticated 
+                ? 'bg-gray-700 border-gray-600 focus:border-purple-500' 
+                : 'bg-gray-800 border-gray-700 cursor-not-allowed'
+            }`}
+            placeholder={
+              isAuthenticated 
+                ? "Write a comment about this project..." 
+                : "Please login to post a comment"
+            }
             value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
+            onChange={(e) => isAuthenticated && setNewComment(e.target.value)}
             rows="3"
+            disabled={!isAuthenticated}
           />
         </div>
         <div className="flex justify-end mt-3">
           <button
-            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+              isAuthenticated
+                ? 'bg-purple-600 hover:bg-purple-700 text-white disabled:opacity-50 disabled:cursor-not-allowed'
+                : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+            }`}
             onClick={handleAddComment}
-            disabled={submitting || !newComment.trim()}
+            disabled={!isAuthenticated || submitting || !newComment.trim()}
           >
-            {submitting ? 'Posting...' : 'Post Comment'}
+            {isAuthenticated 
+              ? (submitting ? 'Posting...' : 'Post Comment') 
+              : 'Login to Comment'}
           </button>
         </div>
       </div>
@@ -375,7 +427,7 @@ const ProjectCommentSection = ({ projectId }) => {
       <div className="space-y-6">
         {comments.length === 0 ? (
           <p className="text-gray-400 text-center py-8">
-            No comments yet. Be the first to share your thoughts!
+            No comments yet. {isAuthenticated ? 'Be the first to share your thoughts!' : 'Login to comment'}
           </p>
         ) : (
           comments.map((comment) => (
@@ -383,6 +435,7 @@ const ProjectCommentSection = ({ projectId }) => {
               key={comment.id}
               comment={comment}
               onAddReply={handleAddReply}
+              isAuthenticated={isAuthenticated}
             />
           ))
         )}

@@ -1,4 +1,5 @@
 import React from 'react';
+import Alert from './alert';
 
 const ConfirmDialog = ({ 
   isOpen, 
@@ -8,7 +9,8 @@ const ConfirmDialog = ({
   message,
   confirmText = "Confirm",
   cancelText = "Cancel",
-  isLoading = false
+  isLoading = false,
+  alert, setAlert
 }) => {
   if (!isOpen) return null;
 
@@ -21,6 +23,11 @@ const ConfirmDialog = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 w-full max-w-md">
         <div className="mb-4">
+        {alert?.message && (
+          <div className="mb-4">
+            <Alert message={alert.message} type={alert.type} onClose={() => setAlert({ message: '', type: '' })} />
+          </div>
+        )}
           <h2 className="text-lg font-semibold text-white">{title}</h2>
           <p className="text-sm text-gray-300 mt-1">
             {message}

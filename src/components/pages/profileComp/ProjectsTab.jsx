@@ -27,7 +27,7 @@ const ProjectsTab = ({ projects = [] }) => {
           {projects.map((project) => (
             
               <div key={project.id} className="w-[350px] shrink-0 px-2 py-4">
-                  <ProjectCard project={project} />
+                  <ProjectCard project={project} bgColor='bg-gray-700/50'/>
                 </div>
           ))}
         </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import ProjectName from "./ProjectName";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link,useLocation } from "react-router-dom";
 import { User, LogOut } from "lucide-react";
 
 function Navbar() {
@@ -12,6 +12,7 @@ function Navbar() {
     avatar: null
   });
   const dropdownRef = useRef();
+  const location = useLocation();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -103,7 +104,7 @@ function Navbar() {
               </div>
             ) : (
               <>
-                <Link to="/login" className="hidden md:block text-[#999ea7] hover:text-gray-300">Login</Link>
+                <Link to="/login" state={{ from: location.pathname }} className="hidden md:block text-[#999ea7] hover:text-gray-300">Login</Link>
                 <Link to="/signup" className="hidden md:block px-5 py-2 font-semibold rounded-md bg-gradient-to-r from-[#d14afb] to-[#6e8afb] text-white hover:opacity-90 transition-all duration-200">
                   Sign Up
                 </Link>

@@ -176,12 +176,16 @@ const UserDataTab = ({ user }) => {
           }
         );
         
-        if (avatarResponse.data.image_url) {
+        if (avatarResponse.data.image) {
+          const newImageUrl = avatarResponse.data.image;
           setUserData(prev => ({ 
             ...prev, 
-            avatarUrl: avatarResponse.data.image_url,
+            avatarUrl: avatarResponse.data.image,
             avatarFile: null 
           }));
+          const url = new URL(newImageUrl);
+          const relativePath = url.pathname;
+          localStorage.setItem('avatar', relativePath);
         }
       }
 

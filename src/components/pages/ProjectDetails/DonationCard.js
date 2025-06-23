@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { axiosInstance } from "../../../Network/axiosinstance";
 import ProgressBar from '../../ProgressBar';
 import { Calendar, Target, TrendingUp } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import Alert from '../../alert';
 
-const DonationCard = ({ project, setProject }) => {
+const DonationCard = ({ project, setProject, isAuthenticated, onRequireLogin }) => {
   const [donationAmount, setDonationAmount] = useState('');
   const [error, setError] = useState('');
   const [daysLeft, setDaysLeft] = useState(0);
+  const [alert, setAlert] = useState(null);
+  const navigate = useNavigate();
   
   // Track current donations in component state
   const [currentDonations, setCurrentDonations] = useState(project.current_donations || 0);
@@ -28,44 +32,63 @@ const DonationCard = ({ project, setProject }) => {
     }
   }, [project.end_date, setProject]);
 
- const handleDonate = async () => {
-  if (!donationAmount || Number(donationAmount) <= 0) {
-    setError('Please enter a valid donation amount');
-    return;
-  }
-
-  try {
-    const response = await axiosInstance.post(
-      `donation/API/projects/${project.id}/donate/`, 
-      { amount: Number(donationAmount) }
-    );
-
-    // Check if response is successful
-    if (response.status >= 200 && response.status < 300) {
-      const updatedAmount = Number(donationAmount);
-      const newTotal = currentDonations + updatedAmount;
-      
-      // Update local state immediately
-      setCurrentDonations(newTotal);
-
-      // Clear error and donation amount
-      setDonationAmount('');
-      setError('');
-
-      // Update parent state
-      setProject((prev) => ({
-        ...prev,
-        current_donations: newTotal,
-        backers: (prev.backers || 0) + 1,
-      }));
-    } else {
-      throw new Error('Failed to process donation');
+  const handleDonate = async () => {
+    // Check authentication first
+    if (!isAuthenticated) {
+      onRequireLogin();
+      return;
     }
-  } catch (err) {
-    console.error('Error during donation:', err);
-    setError(err.response?.data?.error || 'Failed to process donation');
-  }
-};
+
+    // Validate donation amount
+    if (!donationAmount || Number(donationAmount) <= 0) {
+      setAlert({message:'Please enter a valid donation amount'});
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post(
+        `donation/API/projects/${project.id}/donate/`, 
+        { amount: Number(donationAmount) }
+      );
+
+      // Check if response is successful
+      if (response.status >= 200 && response.status < 300) {
+        const updatedAmount = Number(donationAmount);
+        const newTotal = currentDonations + updatedAmount;
+        
+        // Update local state immediately
+        setCurrentDonations(newTotal);
+
+        // Clear error and donation amount
+        setDonationAmount('');
+        setError('');
+
+        // Show success message
+        setAlert({
+          message: `Thank you for your donation of $${updatedAmount}!`,
+          type: 'success'
+        });
+
+        // Update parent state
+        setProject((prev) => ({
+          ...prev,
+          current_donations: newTotal,
+          backers: (prev.backers || 0) + 1,
+        }));
+      } else {
+        throw new Error('Failed to process donation');
+      }
+    } catch (err) {
+      console.error('Error during donation:', err);
+      const errorMsg = err.response?.data?.error || 
+                      err.response?.data?.message || 
+                      'Failed to process donation';
+      setAlert({
+        message: errorMsg,
+        type: 'error'
+      });
+    }
+  };
 
   // Effect to update parent state whenever `currentDonations` changes
   useEffect(() => {
@@ -76,10 +99,20 @@ const DonationCard = ({ project, setProject }) => {
   }, [currentDonations, setProject]);
 
   // Calculate progress percentage using local state
-  const progressPercentage = ((currentDonations / project.target) * 100).toFixed(2);
+  const progressPercentage = Math.min(100, ((currentDonations / project.target) * 100).toFixed(2));
 
   return (
     <div className="bg-gray-800 rounded-xl p-6 shadow-lg w-96" style={{ height: 'fit-content' }}>
+      {alert && (
+        <div className="mb-4">
+          <Alert 
+            message={alert.message} 
+            type={alert.type} 
+            onClose={() => setAlert(null)} 
+          />
+        </div>
+      )}
+      
       <div className="mb-4">
         <div className="flex justify-between mb-2">
           <span className="text-gray-300">Progress</span>
@@ -116,24 +149,41 @@ const DonationCard = ({ project, setProject }) => {
       <input
         type="number"
         value={donationAmount}
-        onChange={(e) => setDonationAmount(e.target.value)}
+        onChange={(e) => {
+          setDonationAmount(e.target.value);
+          setError('');
+        }}
         placeholder="Enter amount ($)"
         className="w-full p-3 bg-gray-700 text-white rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
         min="1"
+        disabled={!project.status || daysLeft <= 0}
       />
       
       <button
         onClick={handleDonate}
-        className="w-full p-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg text-white font-bold hover:from-purple-600 hover:to-blue-600 transition-all duration-200"
+        className={`w-full p-3 rounded-lg text-white font-bold transition-all duration-200 ${
+          !project.status || daysLeft <= 0 
+            ? 'bg-gray-600 cursor-not-allowed'
+            : isAuthenticated
+              ? 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600'
+              : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600'
+        }`}
         disabled={!project.status || daysLeft <= 0}
       >
-        {project.status && daysLeft > 0 
-          ? `Donate $${donationAmount || 0}`
-          : 'Project Ended'
+        {!project.status || daysLeft <= 0 
+          ? 'Project Ended'
+          : isAuthenticated
+            ? `Donate $${donationAmount || 0}`
+            : 'Login to Donate'
         }
       </button>
-      
-      {error && <p className="text-red-400 mt-4 text-sm">{error}</p>}
+    
+
+      {!isAuthenticated && (
+        <p className="text-gray-400 mt-4 text-sm text-center">
+          You need to be logged in to make a donation
+        </p>
+      )}
     </div>
   );
 };

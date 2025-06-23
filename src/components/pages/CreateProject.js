@@ -120,7 +120,7 @@ for (let [key, value] of payload.entries()) {
       }
     } catch (err) {
       console.error(err);
-      showAlert("An error occurred while creating the project.");
+      showAlert(err.response?.data?.error||"An error occurred while creating the project.");
     } finally {
       setIsLoading(false);
     }
@@ -134,7 +134,7 @@ for (let [key, value] of payload.entries()) {
 
       <div className="max-w-4xl mx-auto mb-10 text-left">
         <h1 className="text-4xl font-bold text-white">Create New Project</h1>
-        <p className="text-lg text-gray-300 mt-2">Launch your crowdfunding campaign</p>
+        <p className="text-lg text-gray-300 mt-2">Launch your campaign</p>
       </div>
 
       <form

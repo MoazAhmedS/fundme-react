@@ -11,11 +11,11 @@ function getRemainingDays(endDate) {
   return days === 1 ? 1 : days;
 }
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project ,bgColor='bg-gray-800/50'}) => {
   const navigate = useNavigate();
   
   return (
-    <div className="bg-gray-800/50 text-white rounded-xl shadow-lg overflow-hidden max-w-sm w-full transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:bg-gray-800/70">
+    <div className={`${bgColor} text-white rounded-xl shadow-lg overflow-hidden max-w-sm w-full transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:bg-gray-800/70`}>
       <img src={`http://localhost:8000${project.images[0].path}`} alt={project.title} className="w-full h-48 object-cover" />
 
       <div className="p-5 space-y-4">
